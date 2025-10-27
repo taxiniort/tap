@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculateur de tarif de taxi (Deux-Sèvres) versus Tarif TAP CPAM</title>
+  <link rel="stylesheet" href="tariftaxi.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+	
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2ecc71;
+    }
+    #result {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1>Calculateur de tarif Taxi Vs TAP 🚖</h1>
+  
+  <form id="taxiForm">
+  
+	<div class="tab active" onclick="openTab('tab1')">Accueil</div>
+    <div class="tab" onclick="openTab('tab2')">Paramètres</div>
+
+	<div id="tab1" class="tab-content active">
+		<p><b>Paramètres de la course</b></p>
+		<label for="distance">Distance totale (km)</label>
+		<input type="number" id="distance" step="0.1">
+
+		<label for="dureeAttente">Durée en minutes si consultation (sinon laisser vide et ce sera une hospitalisation)</label>
+		<input type="number" id="dureeAttente">
+
+		<div class="checkbox-container">
+		  <input type="checkbox" id="grandeVille">
+		  <label for="grandeVille">Grande ville (Nantes, Bordeaux, New-York) ?</label>
+		</div>
+
+		<div class="checkbox-container">
+		  <input type="checkbox" id="tarifNuit">
+		  <label for="tarifNuit">Tarif de nuit (si au moins la moitié de la course est de nuit) ?</label>
+		</div>
+		
+			<button type="button" onclick="calculerTarif()">Calculer le tarif</button>
+		<div id="resultsContainer">
+		  <div id="resultTaxi" class="resultBox"></div>
+		  <div id="resultCPAM" class="resultBox"></div>
+		  <div id="resultRemise" class="resultBox"></div>
+		</div>
+	</div>
+
+	<div id="tab2" class="tab-content">
+		<p><b>Paramètres tarification taxis</b></p>
+
+		<label for="tarifA">Tarif A (€)</label>
+		<input type="number" id="tarifA" step="0.01" value="1.11">
+		<label for="tarifB">Tarif B (€)</label>
+		<input type="number" id="tarifB" step="0.01" value="1.60">
+		<label for="tarifC">Tarif C (€)</label>
+		<input type="number" id="tarifC" step="0.01" value="2.22">
+		<label for="tarifD">Tarif D (€)</label>
+		<input type="number" id="tarifD" step="0.01" value="3.20">
+		<label for="heureAttente">Tarif heure d'attente (€)</label>
+		<input type="number" id="heureAttente" step="0.01" value="30.04">
+		<label for="priseChargeTAXI">Tarif de la prise en charge taxi (€)</label>
+		<input type="number" id="priseChargeTAXI" step="0.01" value="2.70">	
+
+		<p><b>Paramètres tarification CPAM</b></p>
+		
+		<label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
+		<input type="number" id="tarifKmCPAM" step="0.01" value="1.08">
+		
+		<label for="priseChargeCPAM">Tarif de la prise en charge CPAM comprenant les 4 premiers kilomètres (€)</label>	
+		<input type="number" id="priseChargeCPAM" step="0.01" value="13">	
+	</div>
+
+  </form>
+
+  <script>
+  
+  function openTab(tabId) {
+	  // Désactiver tous les contenus
+	  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+	  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+	  
+	  // Activer le bon
+	  document.getElementById(tabId).classList.add('active');
+	  event.currentTarget.classList.add('active');
+	}
+	
+  function calculerTarif() {
+	  const distance = Math.abs(parseFloat(document.getElementById('distance').value));
+	  const dureeAttente = Math.abs(parseInt(document.getElementById('dureeAttente').value)) || 0;
+	  const tarifA = parseFloat(document.getElementById('tarifA').value);
+	  const tarifC = parseFloat(document.getElementById('tarifC').value);
+	  const tarifKmCPAM = parseFloat(document.getElementById('tarifKmCPAM').value);
+	  const tarifMinute = parseFloat(document.getElementById('heureAttente').value) / 60;
+	  const priseChargeTAXI = parseFloat(document.getElementById('priseChargeTAXI').value);
+	  const priseChargeCPAM = parseFloat(document.getElementById('priseChargeCPAM').value);
+	  const tarifNuit = document.getElementById('tarifNuit').checked;
+	  const grandeVille = document.getElementById('grandeVille').checked;
+	  
+
+      if (isNaN(distance) || distance <= 0) {
+        document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner la distance totale du trajet.";
+        return;
+      }
+
+      if (isNaN(tarifKmCPAM)) {
+        document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner le tarif kilométrique.";
+        return;
+      }
+
+      if (isNaN(priseChargeTAXI) || isNaN(priseChargeCPAM)) {
+        document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner le tarif de prise en charge.";
+        return;
+      }
+
+	  let totalTaxi = 0;
+	  let totalCPAM = 0;
+	  
+	  
+	  /* Calcul des tarifs taxi et cpam */
+		if (isNaN(dureeAttente) || dureeAttente <= 0) { 
+			// HOSPITALISATION (durée d'attente vide)
+		
+			// Calcul du tarif taxi
+			totalTaxi = priseChargeTAXI + (distance * tarifC); 			
+			
+			// Calcul tarif CPAM
+			if (distance < 50) {
+				// Tarif CPAM moins de 50 km
+				totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * 1.25); 
+			}
+			else {
+				// Tarif CPAM plus de 50 km
+				totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * 1.50);
+			}
+			
+		}  else if (dureeAttente > 0) {
+				// CONSULTATION (durée d'attente renseignée)
+				totalTaxi = priseChargeTAXI + (distance * tarifA * 2) + (dureeAttente * tarifMinute);
+				totalCPAM = (priseChargeCPAM + (distance-4) * tarifKmCPAM) * 2;
+			}
+			else {
+			    document.getElementById('resultTaxi').innerText = "❗Y'a un souci avec la durée d'attente : laisser vide ou mettre un nombre supérieur à zéro.";
+				return;
+			}
+      
+      
+      // Ajustement grande ville (exemple)
+      if (grandeVille) totalCPAM += 15; // +15 € si grande ville
+
+      // Supplément de nuit pour le tarif de Taxi
+      if (tarifNuit) totalTaxi *= 1.44144;
+      // Supplément de nuit pour le tarif de CPAM
+      if (tarifNuit) totalCPAM *= 1.50;
+	  let remise = 100 - ( totalCPAM / totalTaxi * 100 );
+	  
+      document.getElementById('resultTaxi').innerText = `💰 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
+	  document.getElementById('resultCPAM').innerText = `💰 Tarif estimé CPAM : ${totalCPAM.toFixed(2)} €`;
+	  
+	  if (remise >= 0) { document.getElementById('resultRemise').innerText = `Remise effectivé : ${remise.toFixed(1)} %`;
+	  } else { document.getElementById('resultRemise').innerText = `Pas de remise, le tarif CPAM est plus intéressant que le tarif Taxi`; }
+	  
+    }
+  </script>
+</body>
+</html>
