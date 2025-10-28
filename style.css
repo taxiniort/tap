@@ -232,3 +232,10 @@ button:hover {
   cursor: pointer;
   accent-color: #ffcc00;
 }
+
+.section-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.3em;
+  color: #2c3e50;
+}

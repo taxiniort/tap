@@ -81,8 +81,8 @@ function calculerTarif() {
 			/**** CONSULTATION (durée d'attente renseignée) ****/
 			textType="Consultation";
 			totalTaxi = !tarifNuit 
-				? priseChargeTAXI + (distance * tarifA) + (dureeAttente * tarifMinute)  // Tarif de jour
-				: priseChargeTAXI + (distance * tarifB) + (dureeAttente * tarifMinute); // Tarif de nuit
+				? priseChargeTAXI + (distance * 2 * tarifA) + (dureeAttente * tarifMinute)  // Tarif de jour
+				: priseChargeTAXI + (distance * 2 * tarifB) + (dureeAttente * tarifMinute); // Tarif de nuit
 
 			totalCPAM = (priseChargeCPAM + (distance-4) * tarifKmCPAM) * 2;
 		}
@@ -102,8 +102,8 @@ function calculerTarif() {
 	if (tarifNuit) totalCPAM *= 1.50;
 	let remise = 100 - ( totalCPAM / totalTaxi * 100 );
 
-	document.getElementById('resultTaxi').innerText = `💰 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
-	document.getElementById('resultCPAM').innerText = `💰 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €`;
+	document.getElementById('resultTaxi').innerText = `🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
+	document.getElementById('resultCPAM').innerText = `🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €`;
 
 	if (remise >= 0) { document.getElementById('resultRemise').innerText = `Remise effective : ${remise.toFixed(1)} %`;
 	} else { document.getElementById('resultRemise').innerText = `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`; }
