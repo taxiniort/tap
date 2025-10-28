@@ -106,6 +106,6 @@ function calculerTarif() {
 	document.getElementById('resultCPAM').innerText = `💰 Tarif estimé CPAM : ${totalCPAM.toFixed(2)} €`;
 
 	if (remise >= 0) { document.getElementById('resultRemise').innerText = `Remise effective : ${remise.toFixed(1)} %`;
-	} else { document.getElementById('resultRemise').innerText = `Pas de remise, le tarif CPAM est plus intéressant que le tarif Taxi`; }
+	} else { document.getElementById('resultRemise').innerText = `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`; }
 
 }
