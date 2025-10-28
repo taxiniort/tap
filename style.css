@@ -100,16 +100,31 @@ button:hover {
   background: linear-gradient(180deg, #ffd633, #e0b800);
 }
 
-/* Copyright */
-.copyright {
-  font-size: 9px; /* plus petit */
+/* Barre inférieure (convention + copyright) */
+.footer-bar {
+  display: flex;
+  justify-content: space-between; /* gauche / droite */
+  align-items: center;
+  margin-top: 15px;
+  padding: 5px 10px;
+  font-size: 10px;
   color: #555;
-  text-align: right;
-  margin-top: 10px;
-  padding-right: 10px;
-  font-style: italic;
   opacity: 0.8;
+  font-style: italic;
+  border-top: 1px solid #ddd; /* optionnel : petite ligne de séparation */
 }
+
+.footer-bar .convention {
+  text-align: left;
+}
+
+.footer-bar .version {
+  text-align: center;
+}
+.footer-bar .copyright {
+  text-align: right;
+}
+
 
 /* Résultats */
 #resultsContainer {
