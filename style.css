@@ -198,14 +198,14 @@ button:hover {
   position: relative;
 }
 
-.resultBox::before {
+/*.resultBox::before {
   content: "🚖";
   position: absolute;
   left: 8px;
   top: 8px;
   font-size: 16px;
   opacity: 0.8;
-}
+} */
 
 /* Checkbox */
 .checkbox-container {
