@@ -1,4 +1,4 @@
-/* === STYLE TAXI PAR EXCELLENCE === */
+/* === STYLE TAXI PAR EXCELLENCE (version compacte) === */
 
 body {
   font-family: Helvetica, Verdana, sans-serif;
@@ -11,10 +11,9 @@ body {
     rgba(255, 255, 0, 0.03) 10px,
     transparent 10px,
     transparent 20px
-  ); /* effet carrosserie subtile */
+  );
 }
 
-/* Titre inspiré des enseignes de toit */
 h1 {
   text-align: center;
   color: #111;
@@ -24,50 +23,50 @@ h1 {
   font-weight: 900;
   letter-spacing: 1px;
   text-shadow: 0 1px 0 #ffcc00, 0 2px 4px rgba(0,0,0,0.2);
+  font-size: 22px; /* légèrement plus petit */
 }
 
-/* Formulaire — style borne ou panneau */
+/* Formulaire */
 form {
-  font-size: 16px;
-  max-width: 500px;
-  margin: 30px auto;
+  font-size: 14px; /* réduit */
+  max-width: 480px;
+  margin: 25px auto;
   background: #fffef5;
-  padding: 20px 25px;
+  padding: 18px 20px;
   border-radius: 10px;
   border: 2px solid #ffcc00;
   box-shadow: 0 0 12px rgba(0,0,0,0.2);
   position: relative;
 }
 
-/* Fine bande damier sur le haut du formulaire */
 form::before {
   content: "";
   position: absolute;
-  top: -8px;
+  top: -6px;
   left: 0;
   width: 100%;
-  height: 8px;
+  height: 6px;
   background: repeating-linear-gradient(
     90deg,
     #000 0,
-    #000 10px,
-    #ffcc00 10px,
-    #ffcc00 20px
+    #000 8px,
+    #ffcc00 8px,
+    #ffcc00 16px
   );
   border-radius: 8px 8px 0 0;
 }
 
 label {
   display: block;
-  margin-top: 15px;
+  margin-top: 12px;
   font-weight: bold;
   color: #333;
 }
 
 input, select {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
+  padding: 8px;
+  margin-top: 4px;
   border: 1px solid #ccc;
   border-radius: 5px;
   transition: border-color 0.2s;
@@ -76,23 +75,23 @@ input, select {
 input:focus, select:focus {
   border-color: #ffcc00;
   outline: none;
-  box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+  box-shadow: 0 0 4px rgba(255, 204, 0, 0.5);
 }
 
-/* Bouton style "Start Engine" */
+/* Bouton style taxi */
 button {
-  margin-top: 25px;
+  margin-top: 18px;
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background: linear-gradient(180deg, #ffcc00, #d4a700);
   color: #111;
   border: 2px solid #000;
   border-radius: 6px;
-  font-size: 17px;
+  font-size: 15px; /* plus petit */
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
-  box-shadow: 0 4px 0 #000, 0 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 0 #000, 0 4px 8px rgba(0,0,0,0.2);
   transition: transform 0.1s ease-in-out;
 }
 
@@ -101,28 +100,28 @@ button:hover {
   background: linear-gradient(180deg, #ffd633, #e0b800);
 }
 
-/* Copyright discret mais stylé */
+/* Copyright */
 .copyright {
-  font-size: 10px;
+  font-size: 9px; /* plus petit */
   color: #555;
   text-align: right;
-  margin-top: 15px;
+  margin-top: 10px;
   padding-right: 10px;
   font-style: italic;
   opacity: 0.8;
 }
 
-/* Résultats avec bande taxi */
+/* Résultats */
 #resultsContainer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 18px;
   position: relative;
   background: #fff;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.15);
-  padding: 15px 15px 15px 60px; /* espace pour la bande */
+  padding: 12px 12px 12px 55px;
 }
 
 .vertical-label {
@@ -130,7 +129,7 @@ button:hover {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 40px;
+  width: 35px; /* légèrement plus fin */
   background: linear-gradient(180deg, #ffcc00, #e0b800);
   color: #000;
   display: flex;
@@ -139,17 +138,17 @@ button:hover {
   writing-mode: vertical-rl;
   text-orientation: upright;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 12px; /* plus petit */
   border-radius: 5px 0 0 5px;
   border-right: 2px solid #000;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
 }
 
-/* Onglets style tableau de bord */
+/* Onglets */
 .tab {
   display: inline-block;
   background: #ddd;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 5px 5px 0 0;
   cursor: pointer;
   margin-right: 5px;
@@ -157,6 +156,7 @@ button:hover {
   border-bottom: none;
   font-weight: bold;
   color: #333;
+  font-size: 13px; /* réduit */
   transition: all 0.2s;
 }
 
@@ -175,7 +175,7 @@ button:hover {
   display: none;
   border: 1px solid #aaa;
   border-top: none;
-  padding: 20px;
+  padding: 16px;
   background: white;
   border-radius: 0 0 5px 5px;
 }
@@ -184,50 +184,51 @@ button:hover {
   display: block; 
 }
 
-/* Boîte de résultat : effet compteur */
+/* Boîtes résultat */
 .resultBox {
   flex: 1;
   background: #fffbea;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 15px;
+  padding: 12px;
   text-align: center;
   font-weight: bold;
-  font-size: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 14px; /* plus petit */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: relative;
 }
 
 .resultBox::before {
   content: "🚖";
   position: absolute;
-  left: 10px;
-  top: 10px;
-  font-size: 18px;
+  left: 8px;
+  top: 8px;
+  font-size: 16px;
   opacity: 0.8;
 }
 
+/* Checkbox */
 .checkbox-container {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .checkbox-container label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin: 0;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 13px;
   color: #333;
 }
 
 .checkbox-container input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   accent-color: #ffcc00;
 }
