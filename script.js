@@ -23,8 +23,9 @@ function calculerTarif() {
 	const priseChargeTAXI = parseFloat(document.getElementById('priseChargeTAXI').value);
 	const priseChargeCPAM = parseFloat(document.getElementById('priseChargeCPAM').value);
 	const tarifNuit = document.getElementById('tarifNuit').checked;
-	const grandeVille = document.getElementById('grandeVille').checked;
-
+	const aireMetro = document.getElementById('aireMetro').checked;
+	const suppAireMetro = parseFloat(document.getElementById('suppAireMetro').value);
+	
 	if (isNaN(distance) || distance <= 0) {
 		document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner la distance totale du trajet.";
 		return;
@@ -81,7 +82,7 @@ function calculerTarif() {
 	document.getElementById("verticalLabel").innerText = textType;
 	
 	// Ajustement grande ville (exemple)
-	if (grandeVille) totalCPAM += 15; // +15 € si grande ville
+	if (aireMetro) totalCPAM += suppAireMetro; // Supplément pour les aires métropolitaines
 
 	// Supplément de nuit pour le tarif de CPAM
 	if (tarifNuit) totalCPAM *= 1.50;
