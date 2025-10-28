@@ -1,74 +1,118 @@
-css
+/* === STYLE TAXI PAR EXCELLENCE === */
 
 body {
-	font-family: Helvetica, Verdana, sans-serif;
-	background: #f5f5f5;
-	padding: 20px;
-	color: #333;
+  font-family: Helvetica, Verdana, sans-serif;
+  background: linear-gradient(180deg, #fefefe 0%, #f5f5f5 100%);
+  padding: 20px;
+  color: #222;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 0, 0.03) 0,
+    rgba(255, 255, 0, 0.03) 10px,
+    transparent 10px,
+    transparent 20px
+  ); /* effet carrosserie subtile */
 }
 
+/* Titre inspiré des enseignes de toit */
 h1 {
-	text-align: center;
-	color: #2c3e50;
+  text-align: center;
+  color: #111;
+  background: linear-gradient(90deg, #000, #ffcc00, #000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 #ffcc00, 0 2px 4px rgba(0,0,0,0.2);
 }
 
+/* Formulaire — style borne ou panneau */
 form {
-	font-family: Helvetica, Verdana, sans-serif;
-	font-size: 16px;
-	max-width: 500px;
-	margin: 30px auto;
-	background: white;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-size: 16px;
+  max-width: 500px;
+  margin: 30px auto;
+  background: #fffef5;
+  padding: 20px 25px;
+  border-radius: 10px;
+  border: 2px solid #ffcc00;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+/* Fine bande damier sur le haut du formulaire */
+form::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    #000 0,
+    #000 10px,
+    #ffcc00 10px,
+    #ffcc00 20px
+  );
+  border-radius: 8px 8px 0 0;
 }
 
 label {
-	display: block;
-	margin-top: 15px;
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #333;
 }
 
 input, select {
-	width: 100%;
-	padding: 10px;
-	margin-top: 5px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.2s;
 }
 
+input:focus, select:focus {
+  border-color: #ffcc00;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+}
+
+/* Bouton style "Start Engine" */
 button {
-	margin-top: 20px;
-	width: 100%;
-	padding: 12px;
-	background: #27ae60;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	font-size: 16px;
-	cursor: pointer;
+  margin-top: 25px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(180deg, #ffcc00, #d4a700);
+  color: #111;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 #000, 0 5px 10px rgba(0,0,0,0.2);
+  transition: transform 0.1s ease-in-out;
 }
 
 button:hover {
-	background: #2ecc71;
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #ffd633, #e0b800);
 }
 
+/* Copyright discret mais stylé */
 .copyright {
-  font-size: 10px;          /* plus petit */
-  color: #999;              /* gris clair */
-  text-align: right;        /* aligné à droite */
-  margin-top: 10px;
-  padding-right: 8px;       /* léger décalage vers la droite */
+  font-size: 10px;
+  color: #555;
+  text-align: right;
+  margin-top: 15px;
+  padding-right: 10px;
   font-style: italic;
-  opacity: 0.8;             /* un peu transparent pour la discrétion */
+  opacity: 0.8;
 }
 
-#result {
-	text-align: center;
-	font-size: 16px;
-	margin-top: 20px;
-	font-weight: bold;
-}
-
+/* Résultats avec bande taxi */
 #resultsContainer {
   display: flex;
   flex-direction: column;
@@ -77,7 +121,7 @@ button:hover {
   position: relative;
   background: #fff;
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0 5px rgba(0,0,0,0.15);
   padding: 15px 15px 15px 60px; /* espace pour la bande */
 }
 
@@ -87,8 +131,8 @@ button:hover {
   top: 0;
   bottom: 0;
   width: 40px;
-  background: #a8e6a3; /* 🌿 vert pâle */
-  color: white;
+  background: linear-gradient(180deg, #ffcc00, #e0b800);
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,69 +141,93 @@ button:hover {
   font-weight: bold;
   font-size: 13px;
   border-radius: 5px 0 0 5px;
+  border-right: 2px solid #000;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
 }
 
+/* Onglets style tableau de bord */
 .tab {
-	display: inline-block;
-	background: #eee;
-	padding: 10px 20px;
-	border-radius: 5px 5px 0 0;
-	cursor: pointer;
-	margin-right: 5px;
+  display: inline-block;
+  background: #ddd;
+  padding: 10px 20px;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+  margin-right: 5px;
+  border: 1px solid #aaa;
+  border-bottom: none;
+  font-weight: bold;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background: #ffcc00;
+  color: #000;
 }
 
 .tab.active {
-	background: #27ae60;
-	color: white;
+  background: #000;
+  color: #ffcc00;
 }
 
+/* Contenu d'onglet */
 .tab-content {
-	display: none;
-	border: 1px solid #ccc;
-	border-top: none;
-	padding: 20px;
-	background: white;
-	border-radius: 0 0 5px 5px;
+  display: none;
+  border: 1px solid #aaa;
+  border-top: none;
+  padding: 20px;
+  background: white;
+  border-radius: 0 0 5px 5px;
 }
 
 .tab-content.active {
-	display: block; 
+  display: block; 
 }
 
+/* Boîte de résultat : effet compteur */
 .resultBox {
-	flex: 1;
-	background: #fff;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	padding: 15px;
-	text-align: center;
-	font-weight: bold;
-	font-size: 15px;
-	box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex: 1;
+  background: #fffbea;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.resultBox::before {
+  content: "🚖";
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  font-size: 18px;
+  opacity: 0.8;
 }
 
 .checkbox-container {
-	display: flex;              /* Aligne horizontalement */
-	flex-wrap: wrap;            /* Passe à la ligne si trop long */
-	align-items: center;        /* Centre verticalement */
-	gap: 15px;                  /* Espace entre chaque paire case/texte */
-	margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
 }
 
 .checkbox-container label {
-	display: flex;
-	align-items: center;
-	gap: 8px;                   /* Espace entre la case et le texte */
-	margin: 0;
-	cursor: pointer;
-	font-size: 15px;
-	color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
 }
 
 .checkbox-container input[type="checkbox"] {
-	width: 18px;
-	height: 18px;
-	cursor: pointer;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #ffcc00;
 }
-
-

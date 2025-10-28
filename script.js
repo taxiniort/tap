@@ -41,17 +41,17 @@ function calculerTarif() {
 	const suppAireMetro = parseFloat(document.getElementById('suppAireMetro').value);
 	
 	if (isNaN(distance) || distance <= 0) {
-		document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner la distance totale du trajet.";
+		document.getElementById('resultTaxi').innerText = "Veuillez renseigner la distance totale du trajet ❗";
 		return;
 	}
 
 	if (isNaN(tarifKmCPAM)) {
-		document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner le tarif kilométrique.";
+		document.getElementById('resultTaxi').innerText = "Veuillez renseigner le tarif kilométrique ❗";
 		return;
 	}
 
 	if (isNaN(priseChargeTAXI) || isNaN(priseChargeCPAM)) {
-		document.getElementById('resultTaxi').innerText = "❗Veuillez renseigner le tarif de prise en charge.";
+		document.getElementById('resultTaxi').innerText = "Veuillez renseigner le tarif de prise en charge ❗";
 		return;
 	}
 
