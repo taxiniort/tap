@@ -42,11 +42,13 @@ function calculerTarif() {
 
 	let totalTaxi = 0;
 	let totalCPAM = 0;
+	let textType="";
   
 	/* Calcul du montant de la course taxi et cpam */
 	if (isNaN(dureeAttente) || dureeAttente <= 0) { 
 		/**** HOSPITALISATION (durée d'attente vide) ****/
-
+		textType="Hospitalisat.";
+		
 		// Calcul du tarif taxi		
 		totalTaxi = !tarifNuit 
 			? priseChargeTAXI + (distance * tarifC)  // Tarif de jour
@@ -62,6 +64,7 @@ function calculerTarif() {
 		
 	}  else if (dureeAttente > 0) {
 			/**** CONSULTATION (durée d'attente renseignée) ****/
+			textType="Consultation";
 			totalTaxi = !tarifNuit 
 				? priseChargeTAXI + (distance * tarifA) + (dureeAttente * tarifMinute)  // Tarif de jour
 				: priseChargeTAXI + (distance * tarifB) + (dureeAttente * tarifMinute); // Tarif de nuit
@@ -73,6 +76,10 @@ function calculerTarif() {
 			return;
 		}
 
+
+	// On insère la valeur dans la bande
+	document.getElementById("verticalLabel").innerText = textType;
+	
 	// Ajustement grande ville (exemple)
 	if (grandeVille) totalCPAM += 15; // +15 € si grande ville
 
@@ -83,7 +90,7 @@ function calculerTarif() {
 	document.getElementById('resultTaxi').innerText = `💰 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
 	document.getElementById('resultCPAM').innerText = `💰 Tarif estimé CPAM : ${totalCPAM.toFixed(2)} €`;
 
-	if (remise >= 0) { document.getElementById('resultRemise').innerText = `Remise effectivé : ${remise.toFixed(1)} %`;
+	if (remise >= 0) { document.getElementById('resultRemise').innerText = `Remise effective : ${remise.toFixed(1)} %`;
 	} else { document.getElementById('resultRemise').innerText = `Pas de remise, le tarif CPAM est plus intéressant que le tarif Taxi`; }
 
 }

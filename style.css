@@ -51,6 +51,16 @@ button:hover {
 	background: #2ecc71;
 }
 
+.copyright {
+  font-size: 10px;          /* plus petit */
+  color: #999;              /* gris clair */
+  text-align: right;        /* aligné à droite */
+  margin-top: 10px;
+  padding-right: 8px;       /* léger décalage vers la droite */
+  font-style: italic;
+  opacity: 0.8;             /* un peu transparent pour la discrétion */
+}
+
 #result {
 	text-align: center;
 	font-size: 20px;
@@ -59,10 +69,33 @@ button:hover {
 }
 
 #resultsContainer {
-	display: flex;
-	flex-direction: column; /* Empile les enfants verticalement */
-	gap: 10px;              /* Espace entre les résultats */
-	margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  position: relative;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  padding: 15px 15px 15px 60px; /* espace pour la bande */
+}
+
+.vertical-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: #a8e6a3; /* 🌿 vert pâle */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 5px 0 0 5px;
 }
 
 .tab {

@@ -3,13 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Calculateur de tarif de taxi (Deux-Sèvres) versus Tarif TAP CPAM</title>
+	<title>Calculateur de tarif de course Taxi versus course TAP</title>
 	<link rel="stylesheet" href="style.css">  
 </head>
 
 <body>
-  <h1>Calculateur de tarif Taxi Vs TAP 🚖</h1>
-  
+  <h1>Calculateur de course Taxi Vs TAP 🚖</h1>
+
   <form id="taxiForm">
   
 	<div class="tab active" onclick="openTab('tab1')">Accueil</div>
@@ -33,8 +33,10 @@
 		  <label for="tarifNuit">Tarif de nuit (si au moins la moitié de la course est de nuit) ?</label>
 		</div>
 		
-			<button type="button" onclick="calculerTarif()">Calculer le tarif</button>
+		<button type="button" onclick="calculerTarif()">Calculer le tarif</button>
+		
 		<div id="resultsContainer">
+		  <div id="verticalLabel" class="vertical-label"></div>
 		  <div id="resultTaxi" class="resultBox"></div>
 		  <div id="resultCPAM" class="resultBox"></div>
 		  <div id="resultRemise" class="resultBox"></div>
@@ -42,6 +44,14 @@
 	</div>
 
 	<div id="tab2" class="tab-content">
+		<p><b>Paramètres tarification CPAM</b></p>
+		
+		<label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
+		<input type="number" id="tarifKmCPAM" step="0.01" value="1.08">
+		
+		<label for="priseChargeCPAM">Tarif de la prise en charge CPAM comprenant les 4 premiers kilomètres (€)</label>	
+		<input type="number" id="priseChargeCPAM" step="0.01" value="13">	
+		
 		<p><b>Paramètres tarification taxis</b></p>
 
 		<label for="tarifA">Tarif A (€)</label>
@@ -56,16 +66,8 @@
 		<input type="number" id="heureAttente" step="0.01" value="30.04">
 		<label for="priseChargeTAXI">Tarif de la prise en charge taxi (€)</label>
 		<input type="number" id="priseChargeTAXI" step="0.01" value="2.70">	
-
-		<p><b>Paramètres tarification CPAM</b></p>
-		
-		<label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
-		<input type="number" id="tarifKmCPAM" step="0.01" value="1.08">
-		
-		<label for="priseChargeCPAM">Tarif de la prise en charge CPAM comprenant les 4 premiers kilomètres (€)</label>	
-		<input type="number" id="priseChargeCPAM" step="0.01" value="13">	
 	</div>
-
+	<div class="copyright">© 2025 Taxi des Halles</div>
   </form>
  	<script src="script.js"></script>
 </body>
