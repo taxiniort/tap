@@ -12,6 +12,8 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('tarifKmCPAM').value = CONSTANTES.cpam.tarifKmCPAM;
   document.getElementById('priseChargeCPAM').value = CONSTANTES.cpam.priseChargeCPAM;
   document.getElementById('suppAireMetro').value = CONSTANTES.cpam.suppAireMetro;
+  document.getElementById('majoMoins50').value = CONSTANTES.cpam.majoMoins50;
+  document.getElementById('majo50etPlus').value = CONSTANTES.cpam.majo50etPlus;
 });
 
 
@@ -39,6 +41,8 @@ function calculerTarif() {
 	const tarifNuit = document.getElementById('tarifNuit').checked;
 	const aireMetro = document.getElementById('aireMetro').checked;
 	const suppAireMetro = parseFloat(document.getElementById('suppAireMetro').value);
+	const majo50etPlus = parseFloat(document.getElementById('majo50etPlus').value);
+	const majoMoins50 = parseFloat(document.getElementById('majoMoins50').value);
 	
 	if (isNaN(distance) || distance <= 0) {
 		document.getElementById('resultTaxi').innerText = "Veuillez renseigner la distance totale du trajet ❗";
@@ -71,10 +75,10 @@ function calculerTarif() {
 
 		// Calcul tarif CPAM
 		if (distance < 50) {	
-			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * 1.25); // Tarif CPAM moins de 50 km
+			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * majoMoins50); // Tarif CPAM moins de 50 km
 		}
 		else {
-			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * 1.50); // Tarif CPAM plus de 50 km
+			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * majo50etPlus); // Tarif CPAM plus de 50 km
 		}
 		
 	}  else if (dureeAttente > 0) {

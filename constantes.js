@@ -10,6 +10,8 @@ const CONSTANTES = {
   cpam: {
     tarifKmCPAM: 1.08,
     priseChargeCPAM: 13,
-    suppAireMetro: 15
+    suppAireMetro: 15,
+	majoMoins50 : 1.25,
+	majo50etPlus : 1.50
   }
 };
