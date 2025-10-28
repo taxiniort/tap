@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Calculateur de tarif de course Taxi versus course TAP</title>
-	<link rel="stylesheet" href="style.css">  
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
 
 	<div id="tab1" class="tab-content active">
 		<p><b>Paramètres de la course</b></p>
-		<label for="distance">Distance totale (km)</label>
+		<label for="distance">Distance totale parcourue (juste l'aller pour une consult.) (km)</label>
 		<input type="number" id="distance" step="0.1">
 
 		<label for="dureeAttente">Durée en minutes si consultation (sinon laisser vide et ce sera une hospitalisation)</label>
@@ -25,12 +25,12 @@
 
 		<div class="checkbox-container">
 		  <input type="checkbox" id="aireMetro">
-		  <label for="aireMetro">Aire métropolitaine (Nantes, Bordeaux, New-York) ?</label>
+		  <label for="aireMetro">Aire métropolitaine (Nantes, Bordeaux, Tokyo) ?</label>
 		</div>
 
 		<div class="checkbox-container">
 		  <input type="checkbox" id="tarifNuit">
-		  <label for="tarifNuit">Tarif de nuit (si au moins la moitié de la course est de nuit) ?</label>
+		  <label for="tarifNuit">Tarif de nuit (si plus de 50% en course de nuit) ?</label>
 		</div>
 		
 		<button type="button" onclick="calculerTarif()">Calculer le tarif</button>
@@ -47,31 +47,37 @@
 		<p><b>Paramètres tarification CPAM</b></p>
 		
 		<label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
-		<input type="number" id="tarifKmCPAM" step="0.01" value="1.08">
+		<input type="number" id="tarifKmCPAM" step="0.01">
 		
 		<label for="priseChargeCPAM">Tarif de la prise en charge CPAM comprenant les 4 premiers kilomètres (€)</label>	
-		<input type="number" id="priseChargeCPAM" step="0.01" value="13">	
+		<input type="number" id="priseChargeCPAM" step="0.01">	
 
 		<label for="suppAireMetro">Supplément aire métropolitaine (€)</label>	
-		<input type="number" id="suppAireMetro" step="0.01" value="15">	
+		<input type="number" id="suppAireMetro" step="0.01">	
 		
 		<p><b>Paramètres tarification taxis</b></p>
 
 		<label for="tarifA">Tarif A (€)</label>
-		<input type="number" id="tarifA" step="0.01" value="1.11">
+		<input type="number" id="tarifA" step="0.01">
+
 		<label for="tarifB">Tarif B (€)</label>
-		<input type="number" id="tarifB" step="0.01" value="1.60">
+		<input type="number" id="tarifB" step="0.01">
+		
 		<label for="tarifC">Tarif C (€)</label>
-		<input type="number" id="tarifC" step="0.01" value="2.22">
+		<input type="number" id="tarifC" step="0.01">
+		
 		<label for="tarifD">Tarif D (€)</label>
-		<input type="number" id="tarifD" step="0.01" value="3.20">
+		<input type="number" id="tarifD" step="0.01">
+		
 		<label for="heureAttente">Tarif heure d'attente (€)</label>
-		<input type="number" id="heureAttente" step="0.01" value="30.04">
+		<input type="number" id="heureAttente" step="0.01">
+		
 		<label for="priseChargeTAXI">Tarif de la prise en charge taxi (€)</label>
-		<input type="number" id="priseChargeTAXI" step="0.01" value="2.70">	
+		<input type="number" id="priseChargeTAXI" step="0.01">	
 	</div>
 	<div class="copyright">© 2025 Taxi des Halles</div>
   </form>
- 	<script src="script.js"></script>
+  <script src="constantes.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

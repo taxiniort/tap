@@ -1,4 +1,18 @@
-javascript
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Tarifs Taxi
+  document.getElementById('tarifA').value = CONSTANTES.taxi.tarifA;
+  document.getElementById('tarifB').value = CONSTANTES.taxi.tarifB;
+  document.getElementById('tarifC').value = CONSTANTES.taxi.tarifC;
+  document.getElementById('tarifD').value = CONSTANTES.taxi.tarifD;
+  document.getElementById('heureAttente').value = CONSTANTES.taxi.heureAttente;
+  document.getElementById('priseChargeTAXI').value = CONSTANTES.taxi.priseChargeTAXI;
+
+  // Tarifs CPAM
+  document.getElementById('tarifKmCPAM').value = CONSTANTES.cpam.tarifKmCPAM;
+  document.getElementById('priseChargeCPAM').value = CONSTANTES.cpam.priseChargeCPAM;
+  document.getElementById('suppAireMetro').value = CONSTANTES.cpam.suppAireMetro;
+});
 
 
 function openTab(tabId) {

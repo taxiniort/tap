@@ -1,0 +1,15 @@
+const CONSTANTES = {
+  taxi: {
+    tarifA: 1.11,
+    tarifB: 1.60,
+    tarifC: 2.22,
+    tarifD: 3.20,
+    heureAttente: 30.04,
+    priseChargeTAXI: 2.70
+  },
+  cpam: {
+    tarifKmCPAM: 1.08,
+    priseChargeCPAM: 13,
+    suppAireMetro: 15
+  }
+};
