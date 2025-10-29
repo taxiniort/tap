@@ -100,6 +100,27 @@ button:hover {
   background: linear-gradient(180deg, #ffd633, #e0b800);
 }
 
+button.pale {
+  margin-top: 18px;
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(180deg, #fff7b0, #f2e28c);
+  color: #222;
+  border: 2px solid #bfae4e;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 3px 0 #bfae4e, 0 4px 8px rgba(0,0,0,0.15);
+  transition: transform 0.1s ease-in-out, box-shadow 0.2s ease;
+}
+
+button.pale:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #bfae4e, 0 6px 12px rgba(0,0,0,0.2);
+}
+
 /* Barre inférieure (convention + copyright) */
 .footer-bar {
   display: flex;
@@ -253,4 +274,14 @@ button:hover {
   font-weight: 700;
   font-size: 1.3em;
   color: #2c3e50;
+}
+
+input[type="number"],
+input[type="text"] {
+  width: 400px;           /* largeur fixe, ajustable */
+  display: block;         /* pour être sur une nouvelle ligne */
+  margin-bottom: 10px;    /* petit espace sous chaque champ */
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }

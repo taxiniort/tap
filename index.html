@@ -1,6 +1,6 @@
 <!-- 
   Projet : Calculateur Taxi vs TAP
-  Version : 1.1.1
+  Version : 2.0.0
   Dernière mise à jour : 28/10/2025
   Auteur : Jérôme Bernelas
 -->
@@ -19,10 +19,11 @@
   <form id="taxiForm">
 
 	<div class="tab active" onclick="openTab('tab1')">Accueil</div>
-    <div class="tab" onclick="openTab('tab2')">Paramètres</div>
+    <div class="tab" onclick="openTab('tab_partage')">Tr. partagé</div>
+	<div class="tab" onclick="openTab('tab_params')">Paramètres</div>
 
 	<div id="tab1" class="tab-content active">
-		<p class="section-title">☙ Paramètres de la course ❧</p>
+		<p class="section-title">✥ Paramètres de la course ✥</p>
 
 		<label for="distance">Distance parcourue en km (juste <u>l'aller</u> pour une consultation)</label>
 		<input type="number" id="distance" step="0.1">
@@ -40,7 +41,7 @@
 		  <label for="tarifNuit">Tarif de nuit (si plus de 50% en course de nuit) ?</label>
 		</div>
 		
-		<button type="button" onclick="calculerTarif()">Calculer le tarif</button>
+		<button type="button" onclick="afficherTarif()">Calculer le tarif</button>
 		
 		<div id="resultsContainer">
 		  <div id="verticalLabel" class="vertical-label"></div>
@@ -50,8 +51,25 @@
 		</div>
 	</div>
 
-	<div id="tab2" class="tab-content">
-		<p class="section-title">☙ Paramètres tarification CPAM ❧</p>
+		
+	<div id="tab_partage" class="tab-content">
+	  <p class="section-title">✥ Transport Partagé ✥</p>
+	  
+	  <label for="nbPassagers">Nombre de passagers :</label>
+	  <input type="number" id="nbPassagers" min="1" value="2">
+	  
+	  <div id="passengersContainer"></div>
+	  
+
+	  <button type="button" class="pale" onclick="genererFormulairesPassagers()">Créer les formulaires</button>
+	  <button type="button" onclick="calculerTousPassagers()">Calculer le tarif pour tous les passagers</button>
+	  
+	  <div id="resultsPartage"></div>
+	</div>
+
+		
+	<div id="tab_params" class="tab-content">
+		<p class="section-title">✥ Paramètres tarification CPAM ✥</p>
 		
 		<label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
 		<input type="number" id="tarifKmCPAM" step="0.01">
@@ -67,8 +85,8 @@
 		
 		<label for="majoMoins50">Majoration moins de 50 km</label>
 		<input type="number" id="majoMoins50" step="0.01">	
-		
-		<p class="section-title">☙ Paramètres tarification taxis ❧</p>
+				
+		<p class="section-title">✥ Paramètres tarification taxis ✥</p>
 
 		<label for="tarifA">Tarif A (€)</label>
 		<input type="number" id="tarifA" step="0.01">
@@ -90,7 +108,7 @@
 	</div>
 	<div class="footer-bar">
   <div class="convention">Convention 01112025</div>
-  <div class="version">v1.1.1</div>
+  <div class="version">v2.0.0</div>
   <div class="copyright">© 2025 Taxi des Halles</div>
 </div>
 	

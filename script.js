@@ -27,92 +27,169 @@ function openTab(tabId) {
   event.currentTarget.classList.add('active');
 }
 
-function calculerTarif() {
-	const distance = Math.abs(parseFloat(document.getElementById('distance').value));
-	const dureeAttente = Math.abs(parseInt(document.getElementById('dureeAttente').value)) || 0;
-	const tarifA = parseFloat(document.getElementById('tarifA').value);
-	const tarifC = parseFloat(document.getElementById('tarifC').value);
-	const tarifB = parseFloat(document.getElementById('tarifB').value);
-	const tarifD = parseFloat(document.getElementById('tarifD').value);
-	const tarifKmCPAM = parseFloat(document.getElementById('tarifKmCPAM').value);
-	const tarifMinute = parseFloat(document.getElementById('heureAttente').value) / 60;
-	const priseChargeTAXI = parseFloat(document.getElementById('priseChargeTAXI').value);
-	const priseChargeCPAM = parseFloat(document.getElementById('priseChargeCPAM').value);
-	const tarifNuit = document.getElementById('tarifNuit').checked;
-	const aireMetro = document.getElementById('aireMetro').checked;
-	const suppAireMetro = parseFloat(document.getElementById('suppAireMetro').value);
-	const majo50etPlus = parseFloat(document.getElementById('majo50etPlus').value);
-	const majoMoins50 = parseFloat(document.getElementById('majoMoins50').value);
-	
-	if (isNaN(distance) || distance <= 0) {
-		document.getElementById('resultTaxi').innerText = "Veuillez renseigner la distance totale du trajet ❗";
-		return;
-	}
-
-	if (isNaN(tarifKmCPAM)) {
-		document.getElementById('resultTaxi').innerText = "Veuillez renseigner le tarif kilométrique ❗";
-		return;
-	}
-
-	if (isNaN(priseChargeTAXI) || isNaN(priseChargeCPAM)) {
-		document.getElementById('resultTaxi').innerText = "Veuillez renseigner le tarif de prise en charge ❗";
-		return;
-	}
-
-	let totalTaxi = 0;
-	let totalCPAM = 0;
-	let textType="";
-	let suppGdeVille = 0
-	
-	// Ajustement grande ville 	
-	suppGdeVille = aireMetro ? suppAireMetro : 0;
-
-	/* Calcul du montant de la course taxi et cpam */
-	if (isNaN(dureeAttente) || dureeAttente <= 0) {
-		/**** HOSPITALISATION (durée d'attente vide) ****/
-		textType="Hospitalisat.";
-		
-		// Calcul du tarif taxi		
-		totalTaxi = !tarifNuit 
-			? priseChargeTAXI + (distance * tarifC)  // Tarif de jour
-			: priseChargeTAXI + (distance * tarifD); // Tarif de nuit
-				
-		// Calcul tarif CPAM
-		if (distance < 50) {	
-			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * majoMoins50); // Tarif CPAM moins de 50 km
-		}
-		else {
-			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * majo50etPlus); // Tarif CPAM plus de 50 km
-		}
-		
-		totalCPAM += suppGdeVille;
-		
-	}  else if (dureeAttente > 0) {
-			/**** CONSULTATION (durée d'attente renseignée) ****/
-			textType="Consultation";
-			totalTaxi = !tarifNuit 
-				? priseChargeTAXI + (distance * 2 * tarifA) + (dureeAttente * tarifMinute)  // Tarif de jour
-				: priseChargeTAXI + (distance * 2 * tarifB) + (dureeAttente * tarifMinute); // Tarif de nuit
-
-			totalCPAM = (suppGdeVille + priseChargeCPAM + (distance-4) * tarifKmCPAM) * 2;
-		}
-		else {
-			document.getElementById('resultTaxi').innerText = "❗Y'a un souci avec la durée d'attente : laisser vide ou mettre un nombre supérieur à zéro.";
-			return;
-		}
 
 
-	// On insère la valeur dans la bande
-	document.getElementById("verticalLabel").innerText = textType;
-	
-	// Supplément de nuit pour le tarif de CPAM
-	if (tarifNuit) totalCPAM *= 1.50;
-	let remise = 100 - ( totalCPAM / totalTaxi * 100 );
 
-	document.getElementById('resultTaxi').innerText = `🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
-	document.getElementById('resultCPAM').innerText = `🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €`;
+function genererFormulairesPassagers() {
+    const container = document.getElementById('passengersContainer');
+    container.innerHTML = ''; // On vide le conteneur
+    
+    const nbPassagers = parseInt(document.getElementById('nbPassagers').value) || 1;
 
-	if (remise >= 0) { document.getElementById('resultRemise').innerText = `Remise effective : ${remise.toFixed(1)} %`;
-	} else { document.getElementById('resultRemise').innerText = `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`; }
+    for (let i = 1; i <= nbPassagers; i++) {
+        const div = document.createElement('div');
+        div.className = 'passenger-block';
+        div.innerHTML = `
+            <h3>⚜ Passager ${i} ⚜</h3>
+            <label for="distance_${i}">Distance parcourue (juste <u>l'aller</u> pour une consult.)</label>
+            <input type="number" id="distance_${i}" step="0.1">
 
+            <label for="dureeAttente_${i}">Durée pour une consult. (laisser vide pour une hospit.)</label>
+            <input type="number" id="dureeAttente_${i}">
+
+            <div class="checkbox-container">
+              <input type="checkbox" id="aireMetro_${i}">
+              <label for="aireMetro_${i}">Aire métropolitaine ?</label>
+            </div>
+
+            <div class="checkbox-container">
+              <input type="checkbox" id="tarifNuit_${i}">
+              <label for="tarifNuit_${i}">Tarif de nuit ?</label>
+            </div>
+        `;
+        container.appendChild(div);
+    }
 }
+
+
+// ----------------------------
+// Fonction pour calculer le tarif
+// ----------------------------
+function calculerTarif(passager) {
+    // Récupération des paramètres globaux
+    const tarifA = parseFloat(document.getElementById('tarifA').value);
+    const tarifB = parseFloat(document.getElementById('tarifB').value);
+    const tarifC = parseFloat(document.getElementById('tarifC').value);
+    const tarifD = parseFloat(document.getElementById('tarifD').value);
+    const tarifKmCPAM = parseFloat(document.getElementById('tarifKmCPAM').value);
+    const tarifMinute = parseFloat(document.getElementById('heureAttente').value) / 60;
+    const priseChargeTAXI = parseFloat(document.getElementById('priseChargeTAXI').value);
+    const priseChargeCPAM = parseFloat(document.getElementById('priseChargeCPAM').value);
+    const suppAireMetro = parseFloat(document.getElementById('suppAireMetro').value);
+    const majo50etPlus = parseFloat(document.getElementById('majo50etPlus').value);
+    const majoMoins50 = parseFloat(document.getElementById('majoMoins50').value);
+
+    const distance = Math.abs(parseFloat(passager.distance)) || 0;
+    const dureeAttente = Math.abs(parseFloat(passager.dureeAttente)) || 0;
+    const tarifNuit = passager.tarifNuit || false;
+    const aireMetro = passager.aireMetro || false;
+
+    if (distance <= 0) {
+        return null;
+    }
+
+    let suppGdeVille = aireMetro ? suppAireMetro : 0;
+    let totalTaxi = 0;
+    let totalCPAM = 0;
+    let textType = "";
+
+    if (dureeAttente <= 0) {
+        // Hospitalisation
+        textType = "Hospitalisat.";
+        totalTaxi = !tarifNuit
+            ? priseChargeTAXI + distance * tarifC
+            : priseChargeTAXI + distance * tarifD;
+
+        if (distance < 50) {
+            totalCPAM = priseChargeCPAM + (distance - 4) * tarifKmCPAM * majoMoins50;
+        } else {
+            totalCPAM = priseChargeCPAM + (distance - 4) * tarifKmCPAM * majo50etPlus;
+        }
+        totalCPAM += suppGdeVille;
+		totalCPAM *= (tarifNuit ? 1.5 : 1);	
+    } else {
+        // Consultation
+        textType = "Consultation";
+        totalTaxi = !tarifNuit
+            ? priseChargeTAXI + distance * 2 * tarifA + dureeAttente * tarifMinute
+            : priseChargeTAXI + distance * 2 * tarifB + dureeAttente * tarifMinute;
+		totalCPAM = ((priseChargeCPAM + suppGdeVille + ((distance - 4) * tarifKmCPAM)) * (tarifNuit ? 1.5 : 1)) * 2;
+    }
+
+    return { totalTaxi, totalCPAM, textType };
+}
+
+// ----------------------------
+// Fonction pour afficher le tarif d'un seul passager
+// ----------------------------
+function afficherTarif() {
+    const passager = {
+        distance: document.getElementById('distance').value,
+        dureeAttente: document.getElementById('dureeAttente').value,
+        tarifNuit: document.getElementById('tarifNuit').checked,
+        aireMetro: document.getElementById('aireMetro').checked
+    };
+
+    const resultats = calculerTarif(passager);
+    if (!resultats) {
+        document.getElementById('resultTaxi').innerText = "Veuillez renseigner la distance totale du trajet ❗";
+        return;
+    }
+
+    let totalTaxi = resultats.totalTaxi;
+    let totalCPAM = resultats.totalCPAM;
+    const typeCourse = resultats.textType;
+
+
+    const remise = 100 - (totalCPAM / totalTaxi * 100);
+
+    document.getElementById("verticalLabel").innerText = typeCourse;
+    document.getElementById('resultTaxi').innerText = `🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
+    document.getElementById('resultCPAM').innerText = `🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €`;
+    document.getElementById('resultRemise').innerText = remise >= 0
+        ? `Remise effective : ${remise.toFixed(1)} %`
+        : `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`;
+}
+
+
+// ----------------------------
+// Fonction pour calculer tous les passagers
+// ----------------------------
+function calculerTousPassagers() {
+    const nbPassagers = parseInt(document.getElementById('nbPassagers').value) || 1;
+    const resultsDiv = document.getElementById('resultsPartage');
+    resultsDiv.innerHTML = '';
+
+    for (let i = 1; i <= nbPassagers; i++) {
+        const passager = {
+            distance: document.getElementById(`distance_${i}`).value,
+            dureeAttente: document.getElementById(`dureeAttente_${i}`).value,
+            tarifNuit: document.getElementById(`tarifNuit_${i}`).checked,
+            aireMetro: document.getElementById(`aireMetro_${i}`).checked
+        };
+
+        let resultats = calculerTarif(passager);
+        if (!resultats) continue;
+
+        let totalTaxi = resultats.totalTaxi;
+        let totalCPAM = resultats.totalCPAM;
+
+        // Application des réductions selon le nombre de passagers
+        let reduction = 0;
+        if (nbPassagers === 2) reduction = 0.23;
+        else if (nbPassagers === 3) reduction = 0.35;
+        else if (nbPassagers >= 4) reduction = 0.37;
+
+       // totalTaxi *= (1 - reduction);
+        totalCPAM *= (1 - reduction);
+
+        const result = document.createElement('div');
+        result.className = 'passenger-result';
+        result.innerHTML = `<h4>Passager ${i}</h4>
+                            <div>🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €</div>
+                            <div>🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €</div>`;
+        resultsDiv.appendChild(result);
+    }
+}
+
+
