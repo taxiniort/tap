@@ -33,14 +33,21 @@ function openTab(tabId) {
 }
 
 
-
-
+// ------------------------------------------------------------
+// Fonction qui génère autant de formulaires que de passagers
+// Appelée par le bouton "CREER LES FORMULAIRES"
+// Pour le cas du Transport partagé
+// ------------------------------------------------------------
 function genererFormulairesPassagers() {
     const container = document.getElementById('passengersContainer');
     container.innerHTML = ''; // On vide le conteneur
     
     const nbPassagers = parseInt(document.getElementById('nbPassagers').value) || 1;
-
+    
+	if (nbPassagers > 6) {
+        return;
+    }
+	
     for (let i = 1; i <= nbPassagers; i++) {
         const div = document.createElement('div');
         div.className = 'passenger-block';
@@ -67,9 +74,11 @@ function genererFormulairesPassagers() {
 }
 
 
-// ----------------------------
+// -------------------------------------------------------------------
 // Fonction pour calculer le tarif
-// ----------------------------
+// Appelée par : afficherTarifUnPassager et afficherTarifNPassagers()
+// Prends en entrée l'objet passager
+// -------------------------------------------------------------------
 function calculerTarif(passager) {
     // Récupération des paramètres globaux
     const tarifA = parseFloat(document.getElementById('tarifA').value);
@@ -124,10 +133,10 @@ function calculerTarif(passager) {
     return { totalTaxi, totalCPAM, textType };
 }
 
-// ----------------------------
+// -----------------------------------------------------
 // Fonction pour afficher le tarif d'un seul passager
-// ----------------------------
-function afficherTarif() {
+// -----------------------------------------------------
+function afficherTarifUnPassager() {
     const passager = {
         distance: document.getElementById('distance').value,
         dureeAttente: document.getElementById('dureeAttente').value,
@@ -157,10 +166,11 @@ function afficherTarif() {
 }
 
 
-// ----------------------------
-// Fonction pour calculer tous les passagers
-// ----------------------------
-function calculerTousPassagers() {
+// --------------------------------------------------------
+// Fonction pour afficher le tarif de plusieurs passagers
+// Cas du transport partagé
+// --------------------------------------------------------
+function afficherTarifNPassagers() {
     const nbPassagers = parseInt(document.getElementById('nbPassagers').value) || 1;
     const resultsDiv = document.getElementById('resultsPartage');
     resultsDiv.innerHTML = '';
