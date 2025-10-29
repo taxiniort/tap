@@ -49,12 +49,12 @@ function genererFormulairesPassagers() {
 
             <div class="checkbox-container">
               <input type="checkbox" id="aireMetro_${i}">
-              <label for="aireMetro_${i}">Aire métropolitaine ?</label>
+              <label for="aireMetro_${i}">Aire métropolitaine (Nantes...) ?</label>
             </div>
 
             <div class="checkbox-container">
               <input type="checkbox" id="tarifNuit_${i}">
-              <label for="tarifNuit_${i}">Tarif de nuit ?</label>
+              <label for="tarifNuit_${i}">Tarif nuit (si plus de 50% en nuit) ?</label>
             </div>
         `;
         container.appendChild(div);
@@ -95,7 +95,7 @@ function calculerTarif(passager) {
 
     if (dureeAttente <= 0) {
         // Hospitalisation
-        textType = "Hospitalisat.";
+        textType = "HOSPIT.";
         totalTaxi = !tarifNuit
             ? priseChargeTAXI + distance * tarifC
             : priseChargeTAXI + distance * tarifD;
@@ -109,7 +109,7 @@ function calculerTarif(passager) {
 		totalCPAM *= (tarifNuit ? 1.5 : 1);	
     } else {
         // Consultation
-        textType = "Consultation";
+        textType = "CONSULT.";
         totalTaxi = !tarifNuit
             ? priseChargeTAXI + distance * 2 * tarifA + dureeAttente * tarifMinute
             : priseChargeTAXI + distance * 2 * tarifB + dureeAttente * tarifMinute;

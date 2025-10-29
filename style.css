@@ -166,7 +166,7 @@ button.pale:hover {
   top: 0;
   bottom: 0;
   width: 35px; /* légèrement plus fin */
-  background: linear-gradient(180deg, #ffcc00, #e0b800);
+  background: linear-gradient(180deg, #fff7b0, #f2e28c);
   color: #000;
   display: flex;
   align-items: center;
@@ -233,15 +233,6 @@ button.pale:hover {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: relative;
 }
-
-/*.resultBox::before {
-  content: "🚖";
-  position: absolute;
-  left: 8px;
-  top: 8px;
-  font-size: 16px;
-  opacity: 0.8;
-} */
 
 /* Checkbox */
 .checkbox-container {
