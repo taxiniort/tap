@@ -278,10 +278,13 @@ button.pale:hover {
 
 input[type="number"],
 input[type="text"] {
-  width: 100px;           /* largeur fixe, ajustable */
-  display: block;         /* pour être sur une nouvelle ligne */
-  margin-bottom: 10px;    /* petit espace sous chaque champ */
-  padding: 6px;
+  width: 100%;           /* prend toute la largeur du conteneur */
+  max-width: 300px;      /* limite la largeur sur les grands écrans */
+  display: block;
+  margin-bottom: 12px;   /* un peu plus d’espace pour le tactile */
+  padding: 10px;         /* padding plus large pour le confort tactile */
+  font-size: 16px;       /* taille de texte lisible sur smartphone */
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  box-sizing: border-box; /* inclut le padding dans la largeur */
 }
