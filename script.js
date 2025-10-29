@@ -62,9 +62,13 @@ function calculerTarif() {
 	let totalTaxi = 0;
 	let totalCPAM = 0;
 	let textType="";
-  
+	let suppGdeVille = 0
+	
+	// Ajustement grande ville 	
+	suppGdeVille = aireMetro ? suppAireMetro : 0;
+
 	/* Calcul du montant de la course taxi et cpam */
-	if (isNaN(dureeAttente) || dureeAttente <= 0) { 
+	if (isNaN(dureeAttente) || dureeAttente <= 0) {
 		/**** HOSPITALISATION (durée d'attente vide) ****/
 		textType="Hospitalisat.";
 		
@@ -72,7 +76,7 @@ function calculerTarif() {
 		totalTaxi = !tarifNuit 
 			? priseChargeTAXI + (distance * tarifC)  // Tarif de jour
 			: priseChargeTAXI + (distance * tarifD); // Tarif de nuit
-
+				
 		// Calcul tarif CPAM
 		if (distance < 50) {	
 			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * majoMoins50); // Tarif CPAM moins de 50 km
@@ -81,6 +85,8 @@ function calculerTarif() {
 			totalCPAM = priseChargeCPAM + ((distance-4) * tarifKmCPAM * majo50etPlus); // Tarif CPAM plus de 50 km
 		}
 		
+		totalCPAM += suppGdeVille;
+		
 	}  else if (dureeAttente > 0) {
 			/**** CONSULTATION (durée d'attente renseignée) ****/
 			textType="Consultation";
@@ -88,7 +94,7 @@ function calculerTarif() {
 				? priseChargeTAXI + (distance * 2 * tarifA) + (dureeAttente * tarifMinute)  // Tarif de jour
 				: priseChargeTAXI + (distance * 2 * tarifB) + (dureeAttente * tarifMinute); // Tarif de nuit
 
-			totalCPAM = (priseChargeCPAM + (distance-4) * tarifKmCPAM) * 2;
+			totalCPAM = (suppGdeVille + priseChargeCPAM + (distance-4) * tarifKmCPAM) * 2;
 		}
 		else {
 			document.getElementById('resultTaxi').innerText = "❗Y'a un souci avec la durée d'attente : laisser vide ou mettre un nombre supérieur à zéro.";
@@ -99,9 +105,6 @@ function calculerTarif() {
 	// On insère la valeur dans la bande
 	document.getElementById("verticalLabel").innerText = textType;
 	
-	// Ajustement grande ville (exemple)
-	if (aireMetro) totalCPAM += suppAireMetro; // Supplément pour les aires métropolitaines
-
 	// Supplément de nuit pour le tarif de CPAM
 	if (tarifNuit) totalCPAM *= 1.50;
 	let remise = 100 - ( totalCPAM / totalTaxi * 100 );
