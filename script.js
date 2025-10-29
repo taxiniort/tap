@@ -14,6 +14,11 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('suppAireMetro').value = CONSTANTES.cpam.suppAireMetro;
   document.getElementById('majoMoins50').value = CONSTANTES.cpam.majoMoins50;
   document.getElementById('majo50etPlus').value = CONSTANTES.cpam.majo50etPlus;
+  
+  document.getElementById('abatt2pass').value = CONSTANTES.cpam.abatt2pass;
+  document.getElementById('abatt3pass').value = CONSTANTES.cpam.abatt3pass;
+  document.getElementById('abatt4pass').value = CONSTANTES.cpam.abatt4pass;
+
 });
 
 
@@ -160,6 +165,10 @@ function calculerTousPassagers() {
     const resultsDiv = document.getElementById('resultsPartage');
     resultsDiv.innerHTML = '';
 
+    const abatt2pass = parseFloat(document.getElementById('abatt2pass').value);
+    const abatt3pass = parseFloat(document.getElementById('abatt3pass').value);
+    const abatt4pass = parseFloat(document.getElementById('abatt4pass').value);
+	
     for (let i = 1; i <= nbPassagers; i++) {
         const passager = {
             distance: document.getElementById(`distance_${i}`).value,
@@ -176,9 +185,9 @@ function calculerTousPassagers() {
 
         // Application des réductions selon le nombre de passagers
         let reduction = 0;
-        if (nbPassagers === 2) reduction = 0.23;
-        else if (nbPassagers === 3) reduction = 0.35;
-        else if (nbPassagers >= 4) reduction = 0.37;
+        if (nbPassagers === 2) reduction = abatt2pass;
+        else if (nbPassagers === 3) reduction = abatt3pass;
+        else if (nbPassagers >= 4) reduction = abatt4pass;
 
        // totalTaxi *= (1 - reduction);
         totalCPAM *= (1 - reduction);

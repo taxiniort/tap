@@ -12,6 +12,9 @@ const CONSTANTES = {
     priseChargeCPAM: 13,
     suppAireMetro: 15,
 	majoMoins50 : 1.25,
-	majo50etPlus : 1.50
+	majo50etPlus : 1.50,
+	abatt2pass : 0.23,
+	abatt3pass : 0.35,
+	abatt4pass : 0.37
   }
 };

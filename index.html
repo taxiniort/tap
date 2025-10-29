@@ -19,7 +19,7 @@
   <form id="taxiForm">
 
 	<div class="tab active" onclick="openTab('tab1')">Accueil</div>
-    <div class="tab" onclick="openTab('tab_partage')">Tra. partagé</div>
+    <div class="tab" onclick="openTab('tab_partage')">Transp partagé</div>
 	<div class="tab" onclick="openTab('tab_params')">Param.</div>
 
 	<div id="tab1" class="tab-content active">
@@ -85,6 +85,16 @@
 		
 		<label for="majoMoins50">Majoration moins de 50 km</label>
 		<input type="number" id="majoMoins50" step="0.01">	
+		
+		<label for="abatt2pass">Abattement 2 passagers</label>
+		<input type="number" id="abatt2pass" step="0.01">
+		
+		<label for="abatt3pass">Abattement 3 passagers</label>
+		<input type="number" id="abatt3pass" step="0.01">	
+		
+		<label for="abatt4pass">Abattement 4 passagers et plus</label>
+		<input type="number" id="abatt4pass" step="0.01">		
+				
 				
 		<p class="section-title">✥ Paramètres tarifi. taxis ✥</p>
 
