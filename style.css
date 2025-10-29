@@ -278,7 +278,7 @@ button.pale:hover {
 
 input[type="number"],
 input[type="text"] {
-  width: 400px;           /* largeur fixe, ajustable */
+  width: 100px;           /* largeur fixe, ajustable */
   display: block;         /* pour être sur une nouvelle ligne */
   margin-bottom: 10px;    /* petit espace sous chaque champ */
   padding: 6px;
