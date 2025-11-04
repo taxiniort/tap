@@ -204,10 +204,8 @@ function afficherTarifNPassagers() {
         resultsDiv.appendChild(result);
     }
 }
-
 function ouvrirListe() {
-    // Générer le contenu HTML de la liste
-    const data = LISTE_AIRE_METRO.map(item => `• ${item}`).join('\n');
+    const data = LISTE_AIRE_METRO.slice(); // copie de la liste
 
     // Création overlay
     const overlay = document.createElement('div');
@@ -221,9 +219,25 @@ function ouvrirListe() {
     // Création popup
     const popup = document.createElement('div');
     popup.className = 'popup-liste';
+
     popup.innerHTML = `
         <div class="popup-close" onclick="this.parentElement.remove(); document.querySelector('.popup-overlay').remove();">✖</div>
-        <pre>${data}</pre>
+        <div class="popup-title">Aires Métropolitaines</div>
+        <input type="text" class="popup-search" placeholder="Rechercher...">
+        <div class="popup-list">
+            ${data.map(item => `<div>${item}</div>`).join('')}
+        </div>
     `;
     document.body.appendChild(popup);
+
+    const searchInput = popup.querySelector('.popup-search');
+    const listDiv = popup.querySelector('.popup-list');
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        listDiv.innerHTML = data
+            .filter(item => item.toLowerCase().includes(query))
+            .map(item => `<div>${item}</div>`)
+            .join('');
+    });
 }
