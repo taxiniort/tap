@@ -21,7 +21,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
-
 function openTab(tabId) {
   // Désactiver tous les contenus
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -31,7 +30,6 @@ function openTab(tabId) {
   document.getElementById(tabId).classList.add('active');
   event.currentTarget.classList.add('active');
 }
-
 
 // ------------------------------------------------------------
 // Fonction qui génère autant de formulaires que de passagers
@@ -72,7 +70,6 @@ function genererFormulairesPassagers() {
         container.appendChild(div);
     }
 }
-
 
 // -------------------------------------------------------------------
 // Fonction pour calculer le tarif
@@ -153,8 +150,6 @@ function afficherTarifUnPassager() {
     let totalTaxi = resultats.totalTaxi;
     let totalCPAM = resultats.totalCPAM;
     const typeCourse = resultats.textType;
-
-
     const remise = 100 - (totalCPAM / totalTaxi * 100);
 
     document.getElementById("verticalLabel").innerText = typeCourse;
@@ -164,7 +159,6 @@ function afficherTarifUnPassager() {
         ? `Remise effective : ${remise.toFixed(1)} %`
         : `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`;
 }
-
 
 // --------------------------------------------------------
 // Fonction pour afficher le tarif de plusieurs passagers
@@ -211,4 +205,25 @@ function afficherTarifNPassagers() {
     }
 }
 
+function ouvrirListe() {
+    // Générer le contenu HTML de la liste
+    const data = LISTE_AIRE_METRO.map(item => `• ${item}`).join('\n');
 
+    // Création overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'popup-overlay';
+    overlay.onclick = () => {
+        overlay.remove();
+        popup.remove();
+    };
+    document.body.appendChild(overlay);
+
+    // Création popup
+    const popup = document.createElement('div');
+    popup.className = 'popup-liste';
+    popup.innerHTML = `
+        <div class="popup-close" onclick="this.parentElement.remove(); document.querySelector('.popup-overlay').remove();">✖</div>
+        <pre>${data}</pre>
+    `;
+    document.body.appendChild(popup);
+}
