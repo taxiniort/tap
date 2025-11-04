@@ -22,12 +22,13 @@ const CONSTANTES = {
 };
 
 const LISTE_AIRE_METRO = [
+"*** LISTE DES VILLES POUR LE FORFAIT 15 € ***",
 "Nantes",
 "Bordeaux",
 "Paris",
 "Rennes",
 "92,93 et 94",
-"Etc. + ->",
+"Etc. ++ ->",
 "34 Clinique St Jean Sud de France 34270 St Jean de Vedas 340024314",
 "34 Clinique du Parc 34057 Castelnau le Lez 340780667",
 "31 Clinique Croix du sud et SSR attaché 31445 Quint Fonsegrives 310026927",
