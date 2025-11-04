@@ -22,12 +22,12 @@ const CONSTANTES = {
 };
 
   const LISTE_AIRE_METRO = [
-"Nantes",
+  "Nantes",
 "Bordeaux",
 "Paris",
-"Lyon",
-"Marseille",
-"Lille",
+"Rennes",
+"92,93 et 94",
+"Etc. + ->",
 "34 Clinique St Jean Sud de France 34270 St Jean de Vedas 340024314",
 "34 Clinique du Parc 34057 Castelnau le Lez 340780667",
 "31 Clinique Croix du sud et SSR attaché 31445 Quint Fonsegrives 310026927",
@@ -43,7 +43,7 @@ const CONSTANTES = {
 "44 CHU NANTES Site LAENNEC 44162 Saint-Herblain 440017598",
 "44 Clinique Santé Atlantique 44162 Saint-Herblain 440033819",
 "44 Hôpital Privé du Confluent 44143 Rezé 440036499",
-"44 Centre d’hémodialyse –Confluent 44143 Rezé 440041580",
+"44 Centre d’hémodialyse – Confluent 44143 Rezé 440041580",
 "44 CHU NANTES ICO Site Gauducheau 44162 St Herblain 440001113",
 "44 Echo -Dialyse 44162 St Herblain 440055770",
 "44 CRF Tourmaline 44162 St Herblain 440000255",
@@ -78,4 +78,4 @@ const CONSTANTES = {
 "35 Centre hospitalier Privé 35278 St Grégoire 350000121",
 "35 établissement UGECAM du pôle gériatrique rennais de",
 "35 centre de dialyse AUB Santé de Montgermont 35189 Montgermont 350046751",
-];                     
+];
