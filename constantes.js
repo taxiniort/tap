@@ -21,8 +21,8 @@ const CONSTANTES = {
 
 };
 
-  const LISTE_AIRE_METRO = [
-  "Nantes",
+const LISTE_AIRE_METRO = [
+"Nantes",
 "Bordeaux",
 "Paris",
 "Rennes",
