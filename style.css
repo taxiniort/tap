@@ -358,3 +358,31 @@ input[type="text"] {
   border-top: 1px solid #ddd;
   padding-top: 5px;
 }
+
+.pdf-icon + .pdf-icon {
+  margin-left: -4px; /* colle visuellement les cercles */
+}
+
+
+.pdf-icon2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffcc00;
+  color: #000;
+  height: 28px;       /* plus fin */
+  min-width: auto;    /* largeur automatique selon le texte */
+  padding: 0 4px;     /* padding horizontal réduit */
+  border-radius: 8px; /* coins arrondis */
+  font-size: 12px;    /* texte plus petit */
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: background-color 0.2s, transform 0.1s;
+  margin: 0;          /* boutons collés */
+}
+
+.pdf-icon2:hover {
+  background-color: #ffd633;
+  transform: scale(1.05);
+}
