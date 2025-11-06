@@ -279,28 +279,7 @@ input[type="text"] {
   border-radius: 6px;
   box-sizing: border-box; /* inclut le padding dans la largeur */
 }
-.pdf-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-left: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #000;
-  background-color: #FFD700;
-  border-radius: 50%;
-  cursor: pointer;
-  user-select: none;
-  border: 1px solid #aaa;
-  transition: transform 0.1s;
-}
 
-.pdf-icon:hover {
-  transform: scale(1.2);
-  border-color: #888;
-}
 
 /* Styles pour le popup */
 .popup-liste {
@@ -359,16 +338,13 @@ input[type="text"] {
   padding-top: 5px;
 }
 
-.pdf-icon + .pdf-icon {
-  margin-left: -4px; /* colle visuellement les cercles */
-}
-
 
 .pdf-icon2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffcc00;
+  background: linear-gradient(180deg, #fff7b0, #f2e28c);
+  //background-color: #ffcc00;
   color: #000;
   height: 28px;       /* plus fin */
   min-width: auto;    /* largeur automatique selon le texte */
