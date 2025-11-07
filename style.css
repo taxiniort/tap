@@ -387,15 +387,19 @@ input[type="text"] {
   color: #000;              /* texte neutre quand vide */
 }
 
-/* Styles dynamiques selon le type */
+/* Styles dynamiques selon le type - tons orangés */
 .type-bande.consultation {
-  background: linear-gradient(180deg, #e6ccff, #cc99ff);
-  border-color: #9933ff;
-  color: #330066;
+  background: linear-gradient(180deg, #fff4e6, #ffe6cc); /* orange très pâle */
+  border-color: #ffd1a3; /* bordure douce */
+  color: #663300; /* texte foncé pour lisibilité sur fond clair */
 }
 
 .type-bande.hospitalisation {
-  background: linear-gradient(180deg, #ffb8b8, #ff6666);
-  border-color: #cc0000;
-  color: #400000;
+  background: linear-gradient(180deg, #ffd9b3, #ffb366); /* orange plus soutenu mais adouci */
+  border-color: #ff9933; /* bordure un peu plus prononcée */
+  color: #332200; /* texte contrasté */
 }
+
+
+
+
