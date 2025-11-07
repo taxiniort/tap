@@ -1,6 +1,6 @@
 <!-- 
   Projet : Calculateur Taxi vs TAP
-  Version : 2.1.0
+  Version : 2.1.2
   Dernière mise à jour : 28/10/2025
   Auteur : Jérôme Bernelas
 -->
@@ -19,20 +19,18 @@
 
   <form id="taxiForm">
 
-	<div class="tab active" onclick="openTab('tab1')">Accueil</div>
-    <div class="tab" onclick="openTab('tab_partage')">Tran Partagé</div>
-	<div class="tab" onclick="openTab('tab_params')">Param.</div>
-	
-
-	
+	<div class="tab active" onclick="openTab('tab1', event)">Accueil</div>
+    <div class="tab" onclick="openTab('tab_partage', event)">Tran Partagé</div>
+	<div class="tab" onclick="openTab('tab_params'), event">Param.</div>
+		
 	<div id="tab1" class="tab-content active">
 
 		<p class="section-title">✥ Paramètres de la course ✥</p>
-<div class="button-container">
-  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
-  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
-  <span id="typeAffichage" class="type-bande"></span>
-</div>
+		<div class="button-container">
+		  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
+		  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+		  <span id="typeAffichage" class="type-bande"></span>
+		</div>
 		  
 		<label for="distance">Distance parcourue en km (juste <u>l'aller</u> pour une consultation)</label>
 		<input type="number" id="distance" step="0.1">
@@ -53,7 +51,7 @@
 		
 		<button type="button" onclick="afficherTarifUnPassager()">Calculer le tarif</button>
 		
-		<div id="resultsContainer">
+		<div id="resultsContainer" aria-live="polite">
 		 <!-- <div id="verticalLabel" class="vertical-label"></div> -->
 		  <div id="resultTaxi" class="resultBox"></div>
 		  <div id="resultCPAM" class="resultBox"></div>
@@ -63,7 +61,11 @@
 		
 	<div id="tab_partage" class="tab-content">
 	  <p class="section-title">✥ Transport Partagé ✥</p>
-	  
+		<div class="button-container">
+		  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
+		  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+		  <span id="typeAffichage" class="type-bande"></span>
+		</div>	  
 	  <label for="nbPassagers">Nombre de passagers :</label>
 	  <input type="number" id="nbPassagers" min="1" value="2">
 	  
@@ -104,7 +106,6 @@
 		<label for="abatt4pass">Abattement 4 passagers et plus</label>
 		<input type="number" id="abatt4pass" step="0.01">		
 				
-				
 		<p class="section-title">✥ Paramètres tarifi. taxis ✥</p>
 
 		<label for="tarifA">Tarif A (€)</label>
@@ -127,7 +128,7 @@
 	</div>
 	<div class="footer-bar">
   <div class="convention">Convention 01112025</div>
-  <div class="version">v2.1.0</div>
+  <div class="version">v2.1.2</div>
   <div class="copyright">© 2025 Taxi des Halles</div>
 </div>
 	
