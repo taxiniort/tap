@@ -106,7 +106,7 @@ function calculerTarif(passager) {
 
     if (dureeAttente <= 0) {
         // Hospitalisation
-        textType = "HOSPIT.";
+        textType = "Hospitalisation";
         totalTaxi = !tarifNuit
             ? priseChargeTAXI + distance * tarifC
             : priseChargeTAXI + distance * tarifD;
@@ -120,7 +120,7 @@ function calculerTarif(passager) {
 		totalCPAM *= (tarifNuit ? 1.5 : 1);	
     } else {
         // Consultation
-        textType = "CONSULT.";
+        textType = "Consultation";
         totalTaxi = !tarifNuit
             ? priseChargeTAXI + distance * 2 * tarifA + dureeAttente * tarifMinute
             : priseChargeTAXI + distance * 2 * tarifB + dureeAttente * tarifMinute;
@@ -142,8 +142,13 @@ function afficherTarifUnPassager() {
     };
 
     const resultats = calculerTarif(passager);
+	// Si la distance n’est pas renseignée ou invalide
     if (!resultats) {
         document.getElementById('resultTaxi').innerText = "Veuillez renseigner la distance totale du trajet ❗";
+        document.getElementById('resultCPAM').innerText = "";
+        document.getElementById('resultRemise').innerText = "";
+        document.getElementById('typeAffichage').textContent = "";
+        document.getElementById('typeAffichage').classList.remove("consultation", "hospitalisation");
         return;
     }
 
@@ -152,7 +157,9 @@ function afficherTarifUnPassager() {
     const typeCourse = resultats.textType;
     const remise = 100 - (totalCPAM / totalTaxi * 100);
 
-    document.getElementById("verticalLabel").innerText = typeCourse;
+
+   // document.getElementById("verticalLabel").innerText = typeCourse;
+   majTypeAffichage(typeCourse);
     document.getElementById('resultTaxi').innerText = `🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
     document.getElementById('resultCPAM').innerText = `🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €`;
     document.getElementById('resultRemise').innerText = remise >= 0
@@ -240,4 +247,23 @@ function ouvrirListe() {
             .map(item => `<div>${item}</div>`)
             .join('');
     });
+}
+
+function majTypeAffichage(type) {
+  const bande = document.getElementById("typeAffichage");
+
+  // Supprime toutes les classes de type
+  bande.classList.remove("consultation", "hospitalisation");
+
+  if (!type || type.trim() === "") {
+    // Bande vide et transparente
+    bande.textContent = "";
+    return;
+  }
+
+  // Sinon, affiche le type et applique la classe correspondante
+  bande.textContent = type;
+
+  if (type.toLowerCase().includes("consult")) bande.classList.add("consultation");
+  else if (type.toLowerCase().includes("hospit")) bande.classList.add("hospitalisation");
 }

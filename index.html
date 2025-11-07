@@ -22,13 +22,18 @@
 	<div class="tab active" onclick="openTab('tab1')">Accueil</div>
     <div class="tab" onclick="openTab('tab_partage')">Tran Partagé</div>
 	<div class="tab" onclick="openTab('tab_params')">Param.</div>
+	
 
 	
 	<div id="tab1" class="tab-content active">
 
 		<p class="section-title">✥ Paramètres de la course ✥</p>
-		  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
-		  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+<div class="button-container">
+  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
+  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+  <span id="typeAffichage" class="type-bande"></span>
+</div>
+		  
 		<label for="distance">Distance parcourue en km (juste <u>l'aller</u> pour une consultation)</label>
 		<input type="number" id="distance" step="0.1">
 
@@ -49,7 +54,7 @@
 		<button type="button" onclick="afficherTarifUnPassager()">Calculer le tarif</button>
 		
 		<div id="resultsContainer">
-		  <div id="verticalLabel" class="vertical-label"></div>
+		 <!-- <div id="verticalLabel" class="vertical-label"></div> -->
 		  <div id="resultTaxi" class="resultBox"></div>
 		  <div id="resultCPAM" class="resultBox"></div>
 		  <div id="resultRemise" class="resultBox"></div>

@@ -147,38 +147,9 @@ button.pale:hover {
 }
 
 
-/* Résultats */
-#resultsContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 18px;
-  position: relative;
-  background: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.15);
-  padding: 12px 12px 12px 55px;
-}
 
-.vertical-label {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 35px; /* légèrement plus fin */
-  background: linear-gradient(180deg, #fff7b0, #f2e28c);
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-weight: bold;
-  font-size: 12px; /* plus petit */
-  border-radius: 5px 0 0 5px;
-  border-right: 2px solid #000;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
-}
+
+
 
 /* Onglets */
 .tab {
@@ -220,19 +191,39 @@ button.pale:hover {
   display: block; 
 }
 
+/* Résultats */
+#resultsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  position: relative;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.15);
+  padding: 12px;             /* ✅ suppression du décalage à gauche */
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;        /* ✅ centre les .resultBox horizontalement */
+}
+
+
 /* Boîtes résultat */
 .resultBox {
-  flex: 1;
+  width: 100%;                /* occupe toute la largeur du conteneur */
+  max-width: 440px;           /* ✅ optionnel : s’aligne visuellement avec le form */
   background: #fffbea;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 12px;
   text-align: center;
   font-weight: bold;
-  font-size: 14px; /* plus petit */
+  font-size: 14px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: relative;
+  box-sizing: border-box;
 }
+
 
 /* Checkbox */
 .checkbox-container {
@@ -339,26 +330,72 @@ input[type="text"] {
 }
 
 
+
+.pdf-icon2:hover {
+  background-color: #ffd633;
+  transform: translateY(-1px);
+}
+
+/* colle les deux boutons sans espace */
+.pdf-icon2 + .pdf-icon2 {
+  margin-left: 2px;
+}
+
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* espace très léger entre boutons et bande */
+}
+
+
+.button-container {
+  display: flex;            /* met tout en ligne */
+  align-items: center;      /* centre verticalement */
+  gap: 4px;                 /* espace léger entre éléments */
+}
+
 .pdf-icon2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #fff7b0, #f2e28c);
-  //background-color: #ffcc00;
-  color: #000;
-  height: 28px;       /* plus fin */
-  min-width: auto;    /* largeur automatique selon le texte */
-  padding: 0 4px;     /* padding horizontal réduit */
-  border-radius: 8px; /* coins arrondis */
-  font-size: 12px;    /* texte plus petit */
+  height: 24px;             /* hauteur fixe */
+  width: 42px;              /* largeur fixe */
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 2px rgba(0,0,0,0.25);
   transition: background-color 0.2s, transform 0.1s;
-  margin: 0;          /* boutons collés */
+  background: linear-gradient(180deg, #fff7b0, #f2e28c);
+  border: 1px solid #000;
+}
+.type-bande {
+  flex-shrink: 0;           /* ne se réduit jamais */
+  width: 140px;             /* largeur fixe */
+  height: 24px;             /* hauteur fixe */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border-radius: 6px;
+  border: 2px solid transparent;  /* contour vide par défaut */
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  text-align: center;
+  background: transparent;  /* ✅ transparent par défaut */
+  color: #000;              /* texte neutre quand vide */
 }
 
-.pdf-icon2:hover {
-  background-color: #ffd633;
-  transform: scale(1.05);
+/* Styles dynamiques selon le type */
+.type-bande.consultation {
+  background: linear-gradient(180deg, #e6ccff, #cc99ff);
+  border-color: #9933ff;
+  color: #330066;
+}
+
+.type-bande.hospitalisation {
+  background: linear-gradient(180deg, #ffb8b8, #ff6666);
+  border-color: #cc0000;
+  color: #400000;
 }
