@@ -389,9 +389,9 @@ input[type="text"] {
 
 /* Styles dynamiques selon le type - tons orangés */
 .type-bande.consultation {
-  background: linear-gradient(180deg, #b3ffd9, #66ffb3); /* vert dégradé adouci */
-  border-color: #33cc66; /* bordure légèrement plus prononcée */
-  color: #003322; /* texte foncé pour lisibilité */
+  background: linear-gradient(180deg, #e0ffe6, #b3ffcc); /* vert pâle dégradé */
+  border-color: #66cc99; /* bordure douce */
+  color: #004422; /* texte légèrement foncé pour contraste */
 }
 
 .type-bande.hospitalisation {
