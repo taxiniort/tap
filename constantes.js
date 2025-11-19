@@ -20,8 +20,8 @@ const CONSTANTES = {
 };
 
 const LISTE_AIRE_METRO = [
-"Nantes, Bordeaux, Paris, Rennes...",
-"Dép. 92, 93 et 94",
+"Marseille, Paris, Nice, Toulouse, Lyon, Strasbourg,", 
+"Montpellier, Rennes, Bordeaux, Lille, Grenoble, Nantes, dép. 92, 93 et 94",
 "+++",
 "44 CHU NANTES Site LAENNEC 44162 Saint-Herblain 440017598",
 "44 Clinique Santé Atlantique 44162 Saint-Herblain 440033819",
