@@ -1,7 +1,7 @@
 <!-- 
   Projet : Calculateur Taxi vs TAP
-  Version : 2.1.2
-  Dernière mise à jour : 28/10/2025
+  Version : 2.1.3
+  Dernière mise à jour : 12/11/2025
   Auteur : Jérôme Bernelas
 -->
 <!DOCTYPE html>
@@ -18,9 +18,16 @@
   <h1>Calculateur de course Taxi Vs TAP 🚖</h1>
 
   <form id="taxiForm">
+<!-- Bandero défilante au-dessus des onglets -->
+<div id="topBannerForm">
+  <div class="scrolling-text">
+    Si les autres départements sont intéressés, envoyez-moi vos Tarifs taxi et CPAM par mail : 
+    <a href="mailto:taxiniort@pm.me">taxiniort@pm.me</a>
+  </div>
+</div>
 
 	<div class="tab active" onclick="openTab('tab1', event)">Accueil</div>
-    <div class="tab" onclick="openTab('tab_partage', event)">Tran Partagé</div>
+    <div class="tab" onclick="openTab('tab_partage', event)">Tr. Partagé</div>
 	<div class="tab" onclick="openTab('tab_params'), event">Param.</div>
 		
 	<div id="tab1" class="tab-content active">
@@ -128,7 +135,7 @@
 	</div>
 	<div class="footer-bar">
   <div class="convention">Convention 01112025</div>
-  <div class="version">v2.1.2</div>
+  <div class="version">v2.1.3</div>
   <div class="copyright">© 2025 Taxi des Halles, Niort</div>
 </div>
 	
@@ -137,4 +144,6 @@
   <script src="constantes.js"></script>
   <script src="script.js"></script>
 </body>
+
+
 </html>

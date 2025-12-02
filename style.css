@@ -401,5 +401,34 @@ input[type="text"] {
 }
 
 
+/* Bandero défilante au-dessus des onglets */
+#topBannerForm {
+  width: 100%;
+  background-color: #ffcc00;  /* couleur jaune Taxi */
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 0;
+  margin-bottom: 10px;  /* espace avant les onglets */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  text-align: left;
+}
 
+#topBannerForm .scrolling-text {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: scrollBannerForm 20s linear infinite;
+  font-weight: bold;
+  color: #000;
+  font-size: 13px;
+}
 
+#topBannerForm .scrolling-text a {
+  color: #111;
+  text-decoration: underline;
+}
+
+@keyframes scrollBannerForm {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
