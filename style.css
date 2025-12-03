@@ -1,4 +1,4 @@
-/* === STYLE TAXI PAR EXCELLENCE (version compacte) === */
+/* === STYLE TAXI PAR EXCELLENCE (version optimisée) === */
 
 body {
   font-family: Helvetica, Verdana, sans-serif;
@@ -14,6 +14,7 @@ body {
   );
 }
 
+/* Titres */
 h1 {
   text-align: center;
   color: #111;
@@ -23,12 +24,12 @@ h1 {
   font-weight: 900;
   letter-spacing: 1px;
   text-shadow: 0 1px 0 #ffcc00, 0 2px 4px rgba(0,0,0,0.2);
-  font-size: 22px; /* légèrement plus petit */
+  font-size: 22px;
 }
 
 /* Formulaire */
 form {
-  font-size: 14px; /* réduit */
+  font-size: 14px;
   max-width: 480px;
   margin: 25px auto;
   background: #fffef5;
@@ -38,7 +39,6 @@ form {
   box-shadow: 0 0 12px rgba(0,0,0,0.2);
   position: relative;
 }
-
 form::before {
   content: "";
   position: absolute;
@@ -65,11 +65,14 @@ label {
 
 input, select {
   width: 100%;
-  padding: 8px;
+  max-width: 300px;
+  padding: 10px;
   margin-top: 4px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  transition: border-color 0.2s;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus, select:focus {
@@ -78,7 +81,7 @@ input:focus, select:focus {
   box-shadow: 0 0 4px rgba(255, 204, 0, 0.5);
 }
 
-/* Bouton style taxi */
+/* Boutons */
 button {
   margin-top: 18px;
   width: 100%;
@@ -87,44 +90,27 @@ button {
   color: #111;
   border: 2px solid #000;
   border-radius: 6px;
-  font-size: 15px; /* plus petit */
-  font-weight: bold;
-  cursor: pointer;
-  text-transform: uppercase;
-  box-shadow: 0 3px 0 #000, 0 4px 8px rgba(0,0,0,0.2);
-  transition: transform 0.1s ease-in-out;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(180deg, #ffd633, #e0b800);
-}
-
-button.pale {
-  margin-top: 18px;
-  width: 100%;
-  padding: 10px;
-  background: linear-gradient(180deg, #fff7b0, #f2e28c);
-  color: #222;
-  border: 2px solid #bfae4e;
-  border-radius: 6px;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
+  box-shadow: 0 3px 0 #000, 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.1s ease-in-out, background 0.2s;
+}
+button:hover { transform: translateY(-2px); background: linear-gradient(180deg, #ffd633, #e0b800); }
+
+button.pale {
+  background: linear-gradient(180deg, #fff7b0, #f2e28c);
+  color: #222;
+  border: 2px solid #bfae4e;
   box-shadow: 0 3px 0 #bfae4e, 0 4px 8px rgba(0,0,0,0.15);
-  transition: transform 0.1s ease-in-out, box-shadow 0.2s ease;
 }
+button.pale:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #bfae4e, 0 6px 12px rgba(0,0,0,0.2); }
 
-button.pale:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 0 #bfae4e, 0 6px 12px rgba(0,0,0,0.2);
-}
-
-/* Barre inférieure (convention + copyright) */
+/* Barre inférieure */
 .footer-bar {
   display: flex;
-  justify-content: space-between; /* gauche / droite */
+  justify-content: space-between;
   align-items: center;
   margin-top: 15px;
   padding: 5px 10px;
@@ -132,24 +118,11 @@ button.pale:hover {
   color: #555;
   opacity: 0.8;
   font-style: italic;
-  border-top: 1px solid #ddd; /* optionnel : petite ligne de séparation */
+  border-top: 1px solid #ddd;
 }
-
-.footer-bar .convention {
-  text-align: left;
-}
-
-.footer-bar .version {
-  text-align: center;
-}
-.footer-bar .copyright {
-  text-align: right;
-}
-
-
-
-
-
+.footer-bar .convention { text-align: left; }
+.footer-bar .version { text-align: center; }
+.footer-bar .copyright { text-align: right; }
 
 /* Onglets */
 .tab {
@@ -163,21 +136,12 @@ button.pale:hover {
   border-bottom: none;
   font-weight: bold;
   color: #333;
-  font-size: 13px; /* réduit */
+  font-size: 13px;
   transition: all 0.2s;
 }
+.tab:hover { background: #ffcc00; color: #000; }
+.tab.active { background: #000; color: #ffcc00; }
 
-.tab:hover {
-  background: #ffcc00;
-  color: #000;
-}
-
-.tab.active {
-  background: #000;
-  color: #ffcc00;
-}
-
-/* Contenu d'onglet */
 .tab-content {
   display: none;
   border: 1px solid #aaa;
@@ -186,10 +150,7 @@ button.pale:hover {
   background: white;
   border-radius: 0 0 5px 5px;
 }
-
-.tab-content.active {
-  display: block; 
-}
+.tab-content.active { display: block; }
 
 /* Résultats */
 #resultsContainer {
@@ -201,17 +162,14 @@ button.pale:hover {
   background: #fff;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.15);
-  padding: 12px;             /* ✅ suppression du décalage à gauche */
+  padding: 12px;
   width: 100%;
   box-sizing: border-box;
-  align-items: center;        /* ✅ centre les .resultBox horizontalement */
+  align-items: center;
 }
-
-
-/* Boîtes résultat */
 .resultBox {
-  width: 100%;                /* occupe toute la largeur du conteneur */
-  max-width: 440px;           /* ✅ optionnel : s’aligne visuellement avec le form */
+  width: 100%;
+  max-width: 440px;
   background: #fffbea;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -220,10 +178,8 @@ button.pale:hover {
   font-weight: bold;
   font-size: 14px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  position: relative;
   box-sizing: border-box;
 }
-
 
 /* Checkbox */
 .checkbox-container {
@@ -233,7 +189,6 @@ button.pale:hover {
   gap: 12px;
   margin-top: 8px;
 }
-
 .checkbox-container label {
   display: flex;
   align-items: center;
@@ -243,7 +198,6 @@ button.pale:hover {
   font-size: 13px;
   color: #333;
 }
-
 .checkbox-container input[type="checkbox"] {
   width: 16px;
   height: 16px;
@@ -251,6 +205,7 @@ button.pale:hover {
   accent-color: #ffcc00;
 }
 
+/* Titres section */
 .section-title {
   text-align: center;
   font-weight: 700;
@@ -258,21 +213,7 @@ button.pale:hover {
   color: #2c3e50;
 }
 
-input[type="number"],
-input[type="text"] {
-  width: 100%;           /* prend toute la largeur du conteneur */
-  max-width: 300px;      /* limite la largeur sur les grands écrans */
-  display: block;
-  margin-bottom: 12px;   /* un peu plus d’espace pour le tactile */
-  padding: 10px;         /* padding plus large pour le confort tactile */
-  font-size: 16px;       /* taille de texte lisible sur smartphone */
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box; /* inclut le padding dans la largeur */
-}
-
-
-/* Styles pour le popup */
+/* Popup */
 .popup-liste {
   position: fixed;
   top: 50%;
@@ -288,10 +229,9 @@ input[type="text"] {
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  font-size: 0.85em; /* police plus petite */
-  line-height: 1.3em; /* espacement compact */
+  font-size: 0.85em;
+  line-height: 1.3em;
 }
-
 .popup-overlay {
   position: fixed;
   top:0;
@@ -301,66 +241,23 @@ input[type="text"] {
   background: rgba(0,0,0,0.5);
   z-index: 999;
 }
-
 .popup-close {
   align-self: flex-end;
   cursor: pointer;
   font-weight: bold;
   font-size: 16px;
 }
+.popup-title { font-weight: bold; margin-bottom: 8px; text-align: center; }
+.popup-search { margin-bottom: 8px; padding: 5px; border: 1px solid #aaa; border-radius: 4px; }
+.popup-list { overflow-y: auto; flex-grow: 1; border-top: 1px solid #ddd; padding-top: 5px; }
 
-.popup-title {
-  font-weight: bold;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.popup-search {
-  margin-bottom: 8px;
-  padding: 5px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-}
-
-.popup-list {
-  overflow-y: auto;
-  flex-grow: 1;
-  border-top: 1px solid #ddd;
-  padding-top: 5px;
-}
-
-
-
-.pdf-icon2:hover {
-  background-color: #ffd633;
-  transform: translateY(-1px);
-}
-
-/* colle les deux boutons sans espace */
-.pdf-icon2 + .pdf-icon2 {
-  margin-left: 2px;
-}
-
-
-.top-bar {
-  display: flex;
-  align-items: center;
-  gap: 4px; /* espace très léger entre boutons et bande */
-}
-
-
-.button-container {
-  display: flex;            /* met tout en ligne */
-  align-items: center;      /* centre verticalement */
-  gap: 4px;                 /* espace léger entre éléments */
-}
-
+/* PDF boutons */
 .pdf-icon2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 24px;             /* hauteur fixe */
-  width: 42px;              /* largeur fixe */
+  height: 24px;
+  width: 42px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: bold;
@@ -370,137 +267,74 @@ input[type="text"] {
   background: linear-gradient(180deg, #fff7b0, #f2e28c);
   border: 1px solid #000;
 }
+.pdf-icon2:hover { background-color: #ffd633; transform: translateY(-1px); }
+.pdf-icon2 + .pdf-icon2 { margin-left: 2px; }
+
+/* Barre de boutons */
+.button-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Bandes de type */
 .type-bande {
-  flex-shrink: 0;           /* ne se réduit jamais */
-  width: 140px;             /* largeur fixe */
-  height: 24px;             /* hauteur fixe */
+  flex-shrink: 0;
+  width: 140px;
+  height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
   border-radius: 6px;
-  border: 2px solid transparent;  /* contour vide par défaut */
-  box-sizing: border-box;
-  transition: all 0.3s ease;
+  border: 2px solid transparent;
   text-align: center;
-  background: transparent;  /* ✅ transparent par défaut */
-  color: #000;              /* texte neutre quand vide */
+  background: transparent;
+  color: #000;
+  transition: all 0.3s ease;
 }
+.type-bande.consultation { background: linear-gradient(180deg, #e0ffe6, #b3ffcc); border-color: #66cc99; color: #004422; }
+.type-bande.hospitalisation { background: linear-gradient(180deg, #ffd9b3, #ffb366); border-color: #ff9933; color: #332200; }
 
-/* Styles dynamiques selon le type - tons orangés */
-.type-bande.consultation {
-  background: linear-gradient(180deg, #e0ffe6, #b3ffcc); /* vert pâle dégradé */
-  border-color: #66cc99; /* bordure douce */
-  color: #004422; /* texte légèrement foncé pour contraste */
-}
-
-.type-bande.hospitalisation {
-  background: linear-gradient(180deg, #ffd9b3, #ffb366); /* orange plus soutenu mais adouci */
-  border-color: #ff9933; /* bordure un peu plus prononcée */
-  color: #332200; /* texte contrasté */
-}
-
-
-/* Bandero défilante au-dessus des onglets */
+/* Banderole défilante */
 #topBannerForm {
   width: 100%;
-  background-color: #ffcc00;  /* couleur jaune Taxi */
+  background-color: #ffcc00;
   overflow: hidden;
   border-radius: 6px 6px 0 0;
   padding: 6px 0;
-  margin-bottom: 10px;  /* espace avant les onglets */
+  margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-  text-align: left;
 }
-
 #topBannerForm .scrolling-text {
   display: inline-block;
   white-space: nowrap;
-  padding-left: 100%;
+  transform: translateX(100%);
   animation: scrollBannerForm 20s linear infinite;
   font-weight: bold;
-  color: #000;
   font-size: 13px;
 }
 
-#topBannerForm .scrolling-text a {
-  color: #111;
-  text-decoration: underline;
-}
-
+#topBannerForm .scrolling-text a { color: #111; text-decoration: underline; }
 @keyframes scrollBannerForm {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
 }
 
 
-/* Petit rond du département */
-.button-container {
-    display: flex;
-    align-items: center;
-    row-gap: 2px;      /* marge verticale minuscule */
-    column-gap: 6px;   /* marge horizontale légère */
-    flex-wrap: wrap;
-}
-
-
-.zone-dep {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.label-dep {
-    font-size: 14px;
-    color: #000; /* noir demandé */
-}
-
-.fleche-dep {
-    font-size: 16px;
-    margin-right: 4px;
-}
-
-/* Petit rond *//* Rectangle style bouton pour le champ département */
+/* Département */
+.zone-dep { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; line-height: 1; }
+.label-dep, .fleche-dep { margin: 0; padding: 0; line-height: 1; font-weight: bold; color: #000; font-size: 13px; }
 #deptInput {
-    width: 60px;
-    padding: 2px 0;
-    margin: 0;
-    line-height: 1;
-    height: 25px;       /* fixe la hauteur réelle */
-    border-radius: 6px;
-    border: 2px solid #FFD700;
-    background: #fff;
-    text-align: center;
-    font-weight: bold;
-    font-size: 13px;
-    box-sizing: border-box;
-}
-
-
-@keyframes glow {
-    from { box-shadow: 0 0 3px #FFD700; }
-    to   { box-shadow: 0 0 10px #FFD700; }
-}
-
-
-/* Alignement parfait avec les boutons */
-.zone-dep {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0;            /* aucune marge */
-    padding: 0;           /* aucune marge interne */
-    line-height: 1;       /* élimine la marge verticale fantôme */
-}
-
-
-.label-dep,
-.fleche-dep {
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-	  font-weight: bold;
-  color: #000;
+  width: 60px;
+  padding: 2px 0;
+  height: 25px;
+  border-radius: 6px;
+  border: 2px solid #FFD700;
+  background: #fff;
+  text-align: center;
+  font-weight: bold;
   font-size: 13px;
+  box-sizing: border-box;
 }
-
