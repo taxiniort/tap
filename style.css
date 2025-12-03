@@ -318,7 +318,7 @@ button.pale:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #bfae4e, 0 
 
 #topBannerForm .scrolling-text a { color: #111; text-decoration: underline; }
 @keyframes scrollBannerForm {
-  0%   { transform: translateX(100%); }
+  0%   { transform: translateX(60%); }
   100% { transform: translateX(-100%); }
 }
 
