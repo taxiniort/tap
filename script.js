@@ -21,15 +21,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
-function openTab(tabId) {
-  // Désactiver tous les contenus
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-  
-  // Activer le bon
-  document.getElementById(tabId).classList.add('active');
-  event.currentTarget.classList.add('active');
+
+function openTab(tabId, event) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    if(event) event.currentTarget.classList.add('active');
 }
+
 
 // ------------------------------------------------------------
 // Fonction qui génère autant de formulaires que de passagers
@@ -142,13 +141,17 @@ function afficherTarifUnPassager() {
     };
 
     const resultats = calculerTarif(passager);
-	// Si la distance n’est pas renseignée ou invalide
+    const resultsContainer = document.getElementById('resultsContainer');
+
     if (!resultats) {
-        document.getElementById('resultTaxi').innerText = "Veuillez renseigner la distance totale du trajet ❗";
-        document.getElementById('resultCPAM').innerText = "";
-        document.getElementById('resultRemise').innerText = "";
-        document.getElementById('typeAffichage').textContent = "";
-        document.getElementById('typeAffichage').classList.remove("consultation", "hospitalisation");
+        // Vider et réaffecter pour déclencher aria-live
+        resultsContainer.innerHTML = '';
+        resultsContainer.innerHTML = `
+          <div id="resultTaxi" class="resultBox">Veuillez renseigner la distance totale du trajet ❗</div>
+          <div id="resultCPAM" class="resultBox"></div>
+          <div id="resultRemise" class="resultBox"></div>
+        `;
+        majTypeAffichage('');
         return;
     }
 
@@ -157,15 +160,19 @@ function afficherTarifUnPassager() {
     const typeCourse = resultats.textType;
     const remise = 100 - (totalCPAM / totalTaxi * 100);
 
+    majTypeAffichage(typeCourse);
 
-   // document.getElementById("verticalLabel").innerText = typeCourse;
-   majTypeAffichage(typeCourse);
-    document.getElementById('resultTaxi').innerText = `🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €`;
-    document.getElementById('resultCPAM').innerText = `🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €`;
-    document.getElementById('resultRemise').innerText = remise >= 0
-        ? `Remise effective : ${remise.toFixed(1)} %`
-        : `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`;
+    resultsContainer.innerHTML = `
+        <div id="resultTaxi" class="resultBox">🚖 Tarif estimé TAXI : ${totalTaxi.toFixed(2)} €</div>
+        <div id="resultCPAM" class="resultBox">🚑 Tarif estimé TAP : ${totalCPAM.toFixed(2)} €</div>
+        <div id="resultRemise" class="resultBox">
+          ${remise >= 0 
+            ? `Remise effective : ${remise.toFixed(1)} %` 
+            : `Pas de remise, le tarif TAP est plus intéressant que le tarif Taxi`}
+        </div>
+    `;
 }
+
 
 // --------------------------------------------------------
 // Fonction pour afficher le tarif de plusieurs passagers
@@ -199,8 +206,7 @@ function afficherTarifNPassagers() {
         if (nbPassagers === 2) reduction = abatt2pass;
         else if (nbPassagers === 3) reduction = abatt3pass;
         else if (nbPassagers >= 4) reduction = abatt4pass;
-
-       // totalTaxi *= (1 - reduction);
+		
         totalCPAM *= (1 - reduction);
 
         const result = document.createElement('div');
@@ -267,3 +273,36 @@ function majTypeAffichage(type) {
   if (type.toLowerCase().includes("consult")) bande.classList.add("consultation");
   else if (type.toLowerCase().includes("hospit")) bande.classList.add("hospitalisation");
 }
+
+const deptInput = document.getElementById("deptInput");
+deptInput.addEventListener("focus", () => {
+    if(deptInput.value === "79") {   // n'efface que si c'est la valeur par défaut
+        deptInput.value = "";
+    }
+});
+
+// Optionnel : remettre 79 si l'utilisateur quitte le champ vide
+deptInput.addEventListener("blur", () => {
+    if(deptInput.value.trim() === "") {
+        deptInput.value = "79";
+    }
+});
+
+// Création d'un conteneur pour le message d'erreur si pas déjà présent
+let messageDiv = document.createElement('div');
+messageDiv.id = 'deptMessage';
+messageDiv.style.color = 'red';
+messageDiv.style.fontSize = '12px';
+messageDiv.style.marginTop = '4px';
+deptInput.parentNode.appendChild(messageDiv);
+
+deptInput.addEventListener('blur', function() {
+    const value = deptInput.value.trim();
+    
+    if(value !== '79') {
+        messageDiv.textContent = `Dép. ${value} non pris en charge.`;
+    } else {
+        messageDiv.textContent = ''; // efface le message si valeur correcte
+    }
+});
+

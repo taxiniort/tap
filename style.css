@@ -432,3 +432,75 @@ input[type="text"] {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 }
+
+
+/* Petit rond du département */
+.button-container {
+    display: flex;
+    align-items: center;
+    row-gap: 2px;      /* marge verticale minuscule */
+    column-gap: 6px;   /* marge horizontale légère */
+    flex-wrap: wrap;
+}
+
+
+.zone-dep {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.label-dep {
+    font-size: 14px;
+    color: #000; /* noir demandé */
+}
+
+.fleche-dep {
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+/* Petit rond *//* Rectangle style bouton pour le champ département */
+#deptInput {
+    width: 60px;
+    padding: 2px 0;
+    margin: 0;
+    line-height: 1;
+    height: 25px;       /* fixe la hauteur réelle */
+    border-radius: 6px;
+    border: 2px solid #FFD700;
+    background: #fff;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+
+@keyframes glow {
+    from { box-shadow: 0 0 3px #FFD700; }
+    to   { box-shadow: 0 0 10px #FFD700; }
+}
+
+
+/* Alignement parfait avec les boutons */
+.zone-dep {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;            /* aucune marge */
+    padding: 0;           /* aucune marge interne */
+    line-height: 1;       /* élimine la marge verticale fantôme */
+}
+
+
+.label-dep,
+.fleche-dep {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+	  font-weight: bold;
+  color: #000;
+  font-size: 13px;
+}
+

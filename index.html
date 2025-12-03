@@ -19,26 +19,40 @@
 
   <form id="taxiForm">
 <!-- Bandero défilante au-dessus des onglets -->
-<div id="topBannerForm">
-  <div class="scrolling-text">
-    Si les autres départements sont intéressés, envoyez-moi vos tarifs Taxi et CPAM par mail : 
-    <a href="mailto:taxiniort@pm.me">taxiniort@pm.me</a>
-  </div>
-</div>
+<!-- Top Banner + Département -->
+	<div id="topBannerForm">
+		<!-- Texte défilant -->
+		<div class="scrolling-text">
+			Si d’autres départements sont intéressés, merci d’envoyer vos tarifs Taxi, CPAM et abattements par mail :
+			<a href="mailto:taxiniort@pm.me">taxiniort@pm.me</a>
+		</div>
+
+		<!-- Bloc département à droite -->
+		<div class="zone-dep">
+			<span class="label-dep">Votre département</span>
+			<span class="fleche-dep">➜</span>
+			<input id="deptInput" type="number" min="1" max="99" step="1" value="79">
+		</div>
+	</div>
+
+
 
 	<div class="tab active" onclick="openTab('tab1', event)">Accueil</div>
     <div class="tab" onclick="openTab('tab_partage', event)">Tr. Partagé</div>
 	<div class="tab" onclick="openTab('tab_params'), event">Param.</div>
-		
+
 	<div id="tab1" class="tab-content active">
 
+		
 		<p class="section-title">✥ Paramètres de la course ✥</p>
+	
 		<div class="button-container">
 		  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
 		  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
-		  <span id="typeAffichage" class="type-bande"></span>
-		</div>
-		  
+
+
+		</div> 
+
 		<label for="distance">Distance parcourue en km (juste <u>l'aller</u> pour une consultation)</label>
 		<input type="number" id="distance" step="0.1">
 
@@ -113,7 +127,7 @@
 		<label for="abatt4pass">Abattement 4 passagers et plus</label>
 		<input type="number" id="abatt4pass" step="0.01">		
 				
-		<p class="section-title">✥ Paramètres (79) tarif. taxis ✥</p>
+		<p class="section-title">✥ Paramètres (79) tarif. Taxis ✥</p>
 
 		<label for="tarifA">Tarif A (€)</label>
 		<input type="number" id="tarifA" step="0.01">
