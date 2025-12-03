@@ -61,6 +61,8 @@ label {
   margin-top: 12px;
   font-weight: bold;
   color: #333;
+  font-family: Helvetica, Verdana, sans-serif; /* 🔹 ajoute pour retrouver la police "Taxi" */
+  font-size: 14px; /* tu peux ajuster */
 }
 
 input, select {
