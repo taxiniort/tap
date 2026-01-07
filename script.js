@@ -41,12 +41,12 @@ function openTab(tabId, event) {
     if (event) event.currentTarget.classList.add('active');
 
     // Reset visuel de la bande de type (Consultation/Hospit) lors du changement d'onglet
-    const bandes = document.querySelectorAll(".type-bande");
+  /*  const bandes = document.querySelectorAll(".type-bande");
     bandes.forEach(b => {
         b.textContent = "";
         b.style.display = "none";
         b.classList.remove("consultation", "hospitalisation");
-    });
+    });*/
 }
 
 /* ==========================================================================
