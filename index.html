@@ -1,163 +1,143 @@
-<!-- 
-  Projet : Calculateur Taxi vs TAP
-  Version : 2.1.3
-  Dernière mise à jour : 12/11/2025
-  Auteur : Jérôme Bernelas
--->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" type="image/svg+xml" href="favicon.svg">
-	<title>Calculateur Taxi Vs TAP</title>
-	<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>Calculateur Taxi Vs TAP</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Calculateur Taxi Vs TAP (79) 🚖</h1>
+    <h1>Calculateur Taxi Vs TAP (79) 🚖</h1>
 
-  <form id="taxiForm">
-<!-- Bandero défilante au-dessus des onglets -->
-<!-- Top Banner + Département -->
-	<div id="topBannerForm">
-		<!-- Texte défilant -->
-		
-		<div class="scrolling-text">
-			Si d’autres départements sont intéressés par cet outil, envoyez vos tarifs Taxi, CPAM et abattements par mail : taxiniort@pm.me
-		</div>
+    <form id="taxiForm">
+        <div id="topBannerForm">
+            <div class="scrolling-text">
+                Si d’autres départements sont intéressés par cet outil, envoyez vos tarifs Taxi, CPAM et abattements par mail : taxiniort@pm.me
+            </div>
 
-		<!-- Bloc département à droite -->
-		<div class="zone-dep">
-			<span class="label-dep">Votre département</span>
-			<span class="fleche-dep">➜</span>
-			<input id="deptInput" type="number" min="1" max="99" step="1" value="79">
-		</div>
-	</div>
+            <div class="zone-dep">
+                <span class="label-dep">Votre département</span>
+                <span class="fleche-dep">➜</span>
+                <input id="deptInput" type="number" min="1" max="99" step="1" value="79">
+            </div>
+        </div>
 
+        <div class="tab active" onclick="openTab('tab_accueil', event)">Accueil</div>
+        <div class="tab" onclick="openTab('tab_partage', event)">Tr. Partagé</div>
+        <div class="tab" onclick="openTab('tab_params', event)">Param.</div>
 
+        <div id="tab_accueil" class="tab-content active">
+            <p class="section-title">✥ Paramètres de la course ✥</p>
 
-	<div class="tab active" onclick="openTab('tab1', event)">Accueil</div>
-    <div class="tab" onclick="openTab('tab_partage', event)">Tr. Partagé</div>
-	<div class="tab" onclick="openTab('tab_params'), event">Param.</div>
+            <div class="button-container">
+                <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
+                <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+                <span class="type-bande"></span>
+            </div>
 
-	<div id="tab1" class="tab-content active">
+            <label for="distance">Distance parcourue en km (juste l'aller pour une consultation)</label>
+            <input type="number" id="distance" step="0.1">
 
-		
-		<p class="section-title">✥ Paramètres de la course ✥</p>
-	
-		<div class="button-container">
-		  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
-		  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+            <label for="dureeAttente">Durée en minutes pour une consultation (laisser vide pour une hospitalisation)</label>
+            <input type="number" id="dureeAttente">
 
+            <div class="checkbox-container">
+                <input type="checkbox" id="aireMetro">
+                <label for="aireMetro">Aire métropolitaine (Nantes...) ?</label>
+            </div>
 
-		</div> 
+            <div class="checkbox-container">
+                <input type="checkbox" id="tarifNuit">
+                <label for="tarifNuit">Tarif nuit (si plus de 50% en nuit) ?</label>
+            </div>
 
-		<label for="distance">Distance parcourue en km (juste <u>l'aller</u> pour une consultation)</label>
-		<input type="number" id="distance" step="0.1">
+            <button type="button" onclick="afficherTarifUnPassager()">Calculer le tarif</button>
 
-		<label for="dureeAttente">Durée en minutes pour une consultation (laisser vide pour une hospitalisation)</label>
-		<input type="number" id="dureeAttente">
+            <div id="resultsContainer" aria-live="polite">
+                <div id="resultTaxi" class="resultBox"></div>
+                <div id="resultCPAM" class="resultBox"></div>
+                <div id="resultRemise" class="resultBox"></div>
+            </div>
+        </div>
 
-		<div class="checkbox-container">
-		  <input type="checkbox" id="aireMetro">
-		  <label for="aireMetro">Aire métropolitaine (Nantes...) ?</label>
+        <div id="tab_partage" class="tab-content">
+            <p class="section-title">✥ Transport Partagé ✥</p>
+            
+            <div class="button-container">
+                <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
+                <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
+                <span class="type-bande"></span>
+            </div>
 
-		</div>
+            <label for="nbPassagers">Nombre de passagers :</label>
+            <input type="number" id="nbPassagers" min="1" value="2">
 
-		<div class="checkbox-container">
-		  <input type="checkbox" id="tarifNuit">
-		  <label for="tarifNuit">Tarif nuit (si plus de 50% en nuit) ?</label>
-		</div>
-		
-		<button type="button" onclick="afficherTarifUnPassager()">Calculer le tarif</button>
-		
-		<div id="resultsContainer" aria-live="polite">
-		 <!-- <div id="verticalLabel" class="vertical-label"></div> -->
-		  <div id="resultTaxi" class="resultBox"></div>
-		  <div id="resultCPAM" class="resultBox"></div>
-		  <div id="resultRemise" class="resultBox"></div>
-		</div>
-	</div>
-		
-	<div id="tab_partage" class="tab-content">
-	  <p class="section-title">✥ Transport Partagé ✥</p>
-		<div class="button-container">
-		  <span class="pdf-icon2" onclick="ouvrirListe()" title="Ouvrir liste">Métro.</span>
-		  <span class="pdf-icon2" onclick="window.open('CPTS79.pdf', '_blank')">CPTS</span>
-		  <span id="typeAffichage" class="type-bande"></span>
-		</div>	  
-	  <label for="nbPassagers">Nombre de passagers :</label>
-	  <input type="number" id="nbPassagers" min="1" value="2">
-	  
-	  <div id="passengersContainer"></div>
-	  
+            <div id="passengersContainer"></div>
 
-	  <button type="button" class="pale" onclick="genererFormulairesPassagers()">Créer les formulaires</button>
-	  <button type="button" onclick="afficherTarifNPassagers()">Calculer le tarif pour tous les passagers</button>
-	  
-	  <div id="resultsPartage"></div>
-	</div>
+            <button type="button" class="pale" onclick="genererFormulairesPassagers()">Créer les formulaires</button>
+            <button type="button" onclick="afficherTarifNPassagers()">Calculer le tarif pour tous les passagers</button>
 
-		
-	<div id="tab_params" class="tab-content">
-		<p class="section-title">✥ Paramètres (79) tarif. CPAM ✥</p>
-		
-		<label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
-		<input type="number" id="tarifKmCPAM" step="0.01">
-		
-		<label for="priseChargeCPAM">Tarif de la prise en charge CPAM comprenant les 4 premiers kilomètres (€)</label>	
-		<input type="number" id="priseChargeCPAM" step="0.01">	
+            <div id="resultsPartage"></div>
+        </div>
 
-		<label for="suppAireMetro">Supplément aire métropolitaine (€)</label>	
-		<input type="number" id="suppAireMetro" step="0.01">
+        <div id="tab_params" class="tab-content">
+            <p class="section-title">✥ Paramètres (79) tarif. CPAM ✥</p>
 
-		<label for="majo50etPlus">Majoration 50 km et plus</label>
-		<input type="number" id="majo50etPlus" step="0.01">
-		
-		<label for="majoMoins50">Majoration moins de 50 km</label>
-		<input type="number" id="majoMoins50" step="0.01">	
-		
-		<label for="abatt2pass">Abattement 2 passagers</label>
-		<input type="number" id="abatt2pass" step="0.01">
-		
-		<label for="abatt3pass">Abattement 3 passagers</label>
-		<input type="number" id="abatt3pass" step="0.01">	
-		
-		<label for="abatt4pass">Abattement 4 passagers et plus</label>
-		<input type="number" id="abatt4pass" step="0.01">		
-				
-		<p class="section-title">✥ Paramètres (79) tarif. Taxis ✥</p>
+            <label for="tarifKmCPAM">Tarif CPAM du kilomètre (€)</label>
+            <input type="number" id="tarifKmCPAM" step="0.01">
 
-		<label for="tarifA">Tarif A (€)</label>
-		<input type="number" id="tarifA" step="0.01">
+            <label for="priseChargeCPAM">Tarif de la prise en charge CPAM (4 premiers km) (€)</label>
+            <input type="number" id="priseChargeCPAM" step="0.01">
 
-		<label for="tarifB">Tarif B (€)</label>
-		<input type="number" id="tarifB" step="0.01">
-		
-		<label for="tarifC">Tarif C (€)</label>
-		<input type="number" id="tarifC" step="0.01">
-		
-		<label for="tarifD">Tarif D (€)</label>
-		<input type="number" id="tarifD" step="0.01">
-		
-		<label for="heureAttente">Tarif heure d'attente (€)</label>
-		<input type="number" id="heureAttente" step="0.01">
-		
-		<label for="priseChargeTAXI">Tarif de la prise en charge taxi (€)</label>
-		<input type="number" id="priseChargeTAXI" step="0.01">	
-	</div>
-	<div class="footer-bar">
-  <div class="convention">Convention 01112025</div>
-  <div class="version">v2.1.3</div>
-  <div class="copyright">© 2025 Taxi des Halles, Niort</div>
-</div>
-	
-	
-  </form>
-  <script src="constantes.js"></script>
-  <script src="script.js"></script>
+            <label for="suppAireMetro">Supplément aire métropolitaine (€)</label>
+            <input type="number" id="suppAireMetro" step="0.01">
+
+            <label for="majo50etPlus">Majoration 50 km et plus</label>
+            <input type="number" id="majo50etPlus" step="0.01">
+
+            <label for="majoMoins50">Majoration moins de 50 km</label>
+            <input type="number" id="majoMoins50" step="0.01">
+
+            <label for="abatt2pass">Abattement 2 passagers</label>
+            <input type="number" id="abatt2pass" step="0.01">
+
+            <label for="abatt3pass">Abattement 3 passagers</label>
+            <input type="number" id="abatt3pass" step="0.01">
+
+            <label for="abatt4pass">Abattement 4 passagers et plus</label>
+            <input type="number" id="abatt4pass" step="0.01">
+
+            <p class="section-title">✥ Paramètres (79) tarif. Taxis ✥</p>
+
+            <label for="tarifA">Tarif A (€)</label>
+            <input type="number" id="tarifA" step="0.01">
+
+            <label for="tarifB">Tarif B (€)</label>
+            <input type="number" id="tarifB" step="0.01">
+
+            <label for="tarifC">Tarif C (€)</label>
+            <input type="number" id="tarifC" step="0.01">
+
+            <label for="tarifD">Tarif D (€)</label>
+            <input type="number" id="tarifD" step="0.01">
+
+            <label for="heureAttente">Tarif heure d'attente (€)</label>
+            <input type="number" id="heureAttente" step="0.01">
+
+            <label for="priseChargeTAXI">Tarif de la prise en charge taxi (€)</label>
+            <input type="number" id="priseChargeTAXI" step="0.01">
+        </div>
+
+        <div class="footer-bar">
+            <div class="convention">Convention 01112025</div>
+            <div class="version">v2.1.4</div>
+            <div class="copyright">© 2025 Taxi des Halles, Niort</div>
+        </div>
+    </form>
+
+    <script src="constantes.js"></script>
+    <script src="script.js"></script>
 </body>
-
-
 </html>
