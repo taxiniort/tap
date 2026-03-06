@@ -1,10 +1,10 @@
 const CONSTANTES = {
   taxi: {
-    tarifA: 1.11,
-    tarifB: 1.60,
-    tarifC: 2.22,
-    tarifD: 3.20,
-    heureAttente: 30.04,
+    tarifA: 1.13,
+    tarifB: 1.66,
+    tarifC: 2.26,
+    tarifD: 3.32,
+    heureAttente: 30.50,
     priseChargeTAXI: 2.70
   },
   cpam: {
