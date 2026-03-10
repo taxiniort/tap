@@ -382,24 +382,33 @@ async function chercherCarburant() {
         });
 
         // --- AFFICHAGE ---
-        stationsTriees.forEach(station => {
-            const adresse = station.adresse || "Adresse non renseignée";
-            const ville = (station.ville || "Ville inconnue").toUpperCase();
-            const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
+// --- AFFICHAGE ---
+stationsTriees.forEach((station, index) => { // On ajoute 'index' ici
+    const adresse = station.adresse || "Adresse non renseignée";
+    const ville = (station.ville || "Ville inconnue").toUpperCase();
+    const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
 
-            let htmlStation = `
-                <div style="background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
-                        <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold; display: flex; align-items: center; gap: 5px;">
-                            🗺️ Maps
-                        </a>
-                    </div>
-                    <div style="color: #666; font-size: 0.85em; margin-bottom: 10px; line-height: 1.2;">
-                        ${adresse}
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            `;
+    // Si c'est la première station (index 0), on prépare le badge
+    const badgeMoinsCher = (index === 0) 
+        ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 5px; display: inline-block;">🏆 LE MOINS CHER</div>` 
+        : "";
+
+    let htmlStation = `
+        <div style="background: #fff; border: ${index === 0 ? '2px solid #FFD700' : '1px solid #ddd'}; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;">
+            ${badgeMoinsCher}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
+                <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    🗺️ Maps
+                </a>
+            </div>
+            <div style="color: #333; font-weight: 500; font-size: 0.9em; margin-bottom: 10px;">
+                ${adresse}
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+    `;
+    
+    // ... reste de la boucle pour les prix (identique à ton code actuel)
 
             if (station.prix) {
                 const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
