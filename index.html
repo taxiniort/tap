@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <title>Calculateur Taxi Vs TAP</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -146,20 +147,31 @@
 
         <div id="tab_carbu" class="tab-content">
             <p class="section-title">✥ Prix des Carburants ✥</p>
-
-            <div class="search-box" style="display: flex; gap: 8px; margin-bottom: 20px;">
-                <input type="text" id="cpCarbu" placeholder="Code postal (ex: 79000)" style="flex: 1;">
-                <button type="button" onclick="chercherCarburant()" style="width: auto; padding: 0 15px;">🔍</button>
-                <button type="button" onclick="ouvrirCarteCarbu()" style="width: auto; padding: 0 15px; background-color: #4285F4; border-color: #4285F4;">🗺️</button>
+            
+            <div class="search-box" style="display: flex; gap: 8px; margin-bottom: 20px; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label for="cpCarbu">Code postal (+ 10 km autour)</label>
+                    <input type="text" id="cpCarbu" placeholder="Ex: 79000" style="width: 100%; margin-top: 4px;">
+                </div>
+                
+                <button type="button" class="pdf-icon2" onclick="geolocaliserEtChercher()" title="Autour de moi" style="height: 38px; width: 45px; margin-top: 0;">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">my_location</span>
+                </button>
+                
+                <button type="button" class="pdf-icon2" onclick="chercherCarburant()" title="Chercher" style="height: 38px; width: 45px; margin-top: 0;">🔍</button>
+                
+                <button type="button" class="pdf-icon2" onclick="ouvrirCarteCarbu()" title="Ouvrir la carte" style="height: 38px; width: 45px; margin-top: 0;">🗺️</button>
             </div>
 
-            <div id="loaderCarbu" style="display:none; text-align: center; margin: 10px;">
+            <div id="loaderCarbu" style="display:none; text-align: center; margin: 10px; font-weight: bold; color: #d4a700;">
                 Chargement des prix...
             </div>
+<div id="resultsCarbu" class="results-list">
+    <p style="color: #666; font-style: italic; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px;">
+        Cliquez sur <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">my_location</span> ou entrez un code postal.
+    </p>
+</div>
 
-            <div id="resultsCarbu" class="results-list">
-                <p style="color: #666; font-style: italic; text-align: center;">Entrez un code postal pour voir les prix (+ 10 km autour).</p>
-            </div>
         </div>
 
         <div class="footer-bar">

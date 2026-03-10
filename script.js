@@ -342,8 +342,8 @@ deptInput.addEventListener('blur', function() {
  */
 async function chercherCarburant() {
     const cp = document.getElementById('cpCarbu').value;
-    const container = document.getElementById('resultsCarbu');
     const loader = document.getElementById('loaderCarbu');
+    const container = document.getElementById('resultsCarbu');
 
     if (!cp || cp.length !== 5) {
         alert("Veuillez entrer un code postal valide");
@@ -354,17 +354,12 @@ async function chercherCarburant() {
     container.innerHTML = "";
 
     try {
-        // ÉTAPE 1 : Trouver les coordonnées GPS du Code Postal (via l'API officielle adresse.data.gouv.fr)
         const gpsRes = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&postcode=${cp}&limit=1`);
         const gpsData = await gpsRes.json();
         
-        if (!gpsData.features || gpsData.features.length === 0) {
-            throw new Error("Code postal introuvable");
-        }
+        if (!gpsData.features || gpsData.features.length === 0) throw new Error("Code postal introuvable");
 
         const [lon, lat] = gpsData.features[0].geometry.coordinates;
-
-        // ÉTAPE 2 : Chercher les carburants dans un rayon de 10km autour de ce point
         const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=within_distance(geom%2C%20geom'POINT(${lon}%20${lat})'%2C%2010km)&limit=50`;
 
         const response = await fetch(url);
@@ -376,52 +371,8 @@ async function chercherCarburant() {
             return;
         }
 
-        // --- LOGIQUE DE TRI ---
-        const stationsTriees = data.results.sort((a, b) => {
-            const obtenirPrixGazole = (station) => {
-                const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : (station.prix || []);
-                const gazole = prixList.find(p => p['@nom'] === "Gazole");
-                return gazole ? parseFloat(gazole['@valeur']) : Infinity;
-            };
-            return obtenirPrixGazole(a) - obtenirPrixGazole(b);
-        });
-
-        // --- AFFICHAGE ---
-        stationsTriees.forEach((station, index) => {
-            const adresse = station.adresse || "Adresse non renseignée";
-            const ville = (station.ville || "Ville inconnue").toUpperCase();
-            const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
-
-            const badgeMoinsCher = (index === 0) 
-                ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER (Rayon 10km)</div>` 
-                : "";
-
-            let htmlStation = `
-                <div style="background: #fff; border: ${index === 0 ? '2px solid #FFD700' : '1px solid #ddd'}; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;">
-                    ${badgeMoinsCher}
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
-                        <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">🗺️ Maps</a>
-                    </div>
-                    <div style="color: #333; font-weight: 500; font-size: 0.9em; margin-bottom: 10px;">${adresse}</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            `;
-
-            if (station.prix) {
-                const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
-                prixList.forEach(p => {
-                    const valeur = parseFloat(p['@valeur']).toFixed(3);
-                    const estGazole = p['@nom'] === "Gazole";
-                    htmlStation += `
-                        <div style="background: ${estGazole ? '#fff9f9' : '#fdfdfd'}; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
-                            <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p['@nom']}</span>
-                            <span style="color: #8B0000; font-weight: bold; font-size: 1.1em;">${valeur}€</span>
-                        </div>`;
-                });
-            }
-            htmlStation += `</div></div>`;
-            container.innerHTML += htmlStation;
-        });
+        // APPEL DE LA FONCTION COMMUNE
+        afficherResultatsStations(data.results);
 
     } catch (error) {
         loader.style.display = "none";
@@ -477,4 +428,126 @@ function ouvrirCarteCarbu() {
 
     closeBtn.onclick = () => overlay.remove();
     overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
+}
+
+
+/**
+ * Utilise la puce GPS de l'appareil pour trouver les stations autour
+ */
+function geolocaliserEtChercher() {
+    const loader = document.getElementById('loaderCarbu');
+    const container = document.getElementById('resultsCarbu');
+
+    if (!navigator.geolocation) {
+        alert("La géolocalisation n'est pas supportée par votre navigateur.");
+        return;
+    }
+
+    loader.style.display = "block";
+    container.innerHTML = "Autorisez l'accès à votre position...";
+
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            // On peut vider le champ CP car on utilise les coordonnées directes
+            document.getElementById('cpCarbu').value = ""; 
+            
+            // On appelle une version modifiée de la recherche qui accepte les coordonnées
+            await chercherCarburantParCoordonnees(lat, lon);
+        },
+        (error) => {
+            loader.style.display = "none";
+            container.innerHTML = "";
+            alert("Erreur de géolocalisation : " + error.message);
+        }
+    );
+}
+
+/**
+ * Version de recherche utilisant directement Latitude et Longitude
+ */
+async function chercherCarburantParCoordonnees(lat, lon) {
+    const container = document.getElementById('resultsCarbu');
+    const loader = document.getElementById('loaderCarbu');
+
+    loader.style.display = "block";
+    container.innerHTML = "";
+
+    try {
+        const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=within_distance(geom%2C%20geom'POINT(${lon}%20${lat})'%2C%2010km)&limit=50`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        loader.style.display = "none";
+
+        if (!data.results || data.results.length === 0) {
+            container.innerHTML = "<p style='text-align:center;'>Aucune station dans un rayon de 10km autour de vous.</p>";
+            return;
+        }
+
+        // --- ICI : REPRENDRE LA MÊME LOGIQUE DE TRI ET D'AFFICHAGE QUE TA FONCTION ORIGINALE ---
+        afficherResultatsStations(data.results); // On crée une petite fonction commune pour éviter de répéter le code
+        
+    } catch (error) {
+        loader.style.display = "none";
+        container.innerHTML = `<p style='color:red; text-align:center;'>Erreur : ${error.message}</p>`;
+    }
+}
+
+
+/**
+ * Logique unique pour trier et afficher les stations
+ */
+function afficherResultatsStations(results) {
+    const container = document.getElementById('resultsCarbu');
+    container.innerHTML = "";
+
+    // --- LOGIQUE DE TRI ---
+    const stationsTriees = results.sort((a, b) => {
+        const obtenirPrixGazole = (station) => {
+            const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : (station.prix || []);
+            const gazole = prixList.find(p => p['@nom'] === "Gazole");
+            return gazole ? parseFloat(gazole['@valeur']) : Infinity;
+        };
+        return obtenirPrixGazole(a) - obtenirPrixGazole(b);
+    });
+
+    // --- AFFICHAGE ---
+    stationsTriees.forEach((station, index) => {
+        const adresse = station.adresse || "Adresse non renseignée";
+        const ville = (station.ville || "Ville inconnue").toUpperCase();
+        const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
+
+        const badgeMoinsCher = (index === 0) 
+            ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER (10km)</div>` 
+            : "";
+
+        let htmlStation = `
+            <div style="background: #fff; border: ${index === 0 ? '2px solid #FFD700' : '1px solid #ddd'}; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;">
+                ${badgeMoinsCher}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
+                    <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">🗺️ Maps</a>
+                </div>
+                <div style="color: #333; font-weight: 500; font-size: 0.9em; margin-bottom: 10px;">${adresse}</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        `;
+
+        if (station.prix) {
+            const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
+            prixList.forEach(p => {
+                const valeur = parseFloat(p['@valeur']).toFixed(3);
+                const estGazole = p['@nom'] === "Gazole";
+                htmlStation += `
+                    <div style="background: ${estGazole ? '#fff9f9' : '#fdfdfd'}; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
+                        <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p['@nom']}</span>
+                        <span style="color: #8B0000; font-weight: bold; font-size: 1.1em;">${valeur}€</span>
+                    </div>`;
+            });
+        }
+        htmlStation += `</div></div>`;
+        container.innerHTML += htmlStation;
+    });
 }
