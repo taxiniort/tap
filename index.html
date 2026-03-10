@@ -143,15 +143,14 @@
 				<img src="remise_consult.png" alt="Graphique Abattements" style="max-width: 100%; border-radius: 8px; border: 1px solid #ddd;">
 			</div>
 		</div>
-
-
 		
 		<div id="tab_carbu" class="tab-content">
 			<p class="section-title">✥ Prix des Carburants ✥</p>
 			
-			<div class="search-box" style="display: flex; gap: 10px; margin-bottom: 20px;">
+			<div class="search-box" style="display: flex; gap: 8px; margin-bottom: 20px;">
 				<input type="text" id="cpCarbu" placeholder="Code postal (ex: 79000)" style="flex: 1;">
 				<button type="button" onclick="chercherCarburant()" style="width: auto; padding: 0 15px;">🔍</button>
+				<button type="button" onclick="ouvrirCarteCarbu()" style="width: auto; padding: 0 15px; background-color: #4285F4; border-color: #4285F4;">🗺️</button>
 			</div>
 
 			<div id="loaderCarbu" style="display:none; text-align: center; margin: 10px;">

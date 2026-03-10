@@ -435,3 +435,58 @@ async function chercherCarburant() {
         console.error(error);
     }
 }
+
+
+function ouvrirCarteCarbu() {
+    const cp = document.getElementById('cpCarbu').value;
+    
+    if (!cp || cp.length !== 5) {
+        alert("Veuillez entrer un code postal à 5 chiffres pour centrer la carte.");
+        return;
+    }
+    
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); z-index: 1000; display: flex;
+        justify-content: center; align-items: center; padding: 10px;
+    `;
+    
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+        position: relative; width: 100%; max-width: 900px; height: 85%;
+        background: white; border-radius: 12px; overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    `;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = "✖ Fermer";
+    closeBtn.style.cssText = `
+        position: absolute; top: 10px; right: 10px; z-index: 1001;
+        padding: 10px 20px; background: #e74c3c; color: white;
+        border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+    `;
+    
+    const iframe = document.createElement('iframe');
+    
+    // CONSTRUCTION DE L'URL DYNAMIQUE :
+    // q=${cp} -> Force la recherche et le centrage automatique sur cette zone
+    // static=false -> Permet au moteur de bouger la vue au chargement
+    const baseUrl = "https://data.economie.gouv.fr/explore/embed/dataset/prix-des-carburants-en-france-flux-instantane-v2/map/";
+    // q=${cp} -> Centre la carte sur le lieu
+// refine.cp=${cp} -> MASQUE toutes les stations qui n'ont pas ce code postal
+const params = `?q=${cp}&refine.cp=${cp}&basemap=6827db&static=false&datasetcard=false&scrollWheelZoom=true`;
+    
+    iframe.src = baseUrl + params;
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+
+    popup.appendChild(closeBtn);
+    popup.appendChild(iframe);
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+
+    closeBtn.onclick = () => overlay.remove();
+    overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
+}
