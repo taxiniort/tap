@@ -348,31 +348,38 @@ async function chercherCarburant() {
     const loader = document.getElementById('loaderCarbu');
 
     if (!cp || cp.length !== 5) {
-        alert("Veuillez entrer un code postal valide (5 chiffres)");
+        alert("Veuillez entrer un code postal valide");
         return;
     }
 
     loader.style.display = "block";
     container.innerHTML = "";
 
-    // URL de l'API OpenData Gouv
-    const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=cp%3D%22${cp}%22&limit=20`;
-
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-            mode: 'cors',
-            headers: { 'Accept': 'application/json' }
-        });
+        // ÉTAPE 1 : Trouver les coordonnées GPS du Code Postal (via l'API officielle adresse.data.gouv.fr)
+        const gpsRes = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&postcode=${cp}&limit=1`);
+        const gpsData = await gpsRes.json();
+        
+        if (!gpsData.features || gpsData.features.length === 0) {
+            throw new Error("Code postal introuvable");
+        }
+
+        const [lon, lat] = gpsData.features[0].geometry.coordinates;
+
+        // ÉTAPE 2 : Chercher les carburants dans un rayon de 10km autour de ce point
+        // On utilise 'within_distance(geom, geom'POINT(lon lat)', 10km)'
+        const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=within_distance(geom%2C%20geom'POINT(${lon}%20${lat})'%2C%2010km)&limit=50`;
+
+        const response = await fetch(url);
         const data = await response.json();
         loader.style.display = "none";
 
         if (!data.results || data.results.length === 0) {
-            container.innerHTML = "<p style='text-align:center; margin-top:20px;'>Aucune station trouvée pour ce code postal.</p>";
+            container.innerHTML = "<p style='text-align:center;'>Aucune station dans un rayon de 10km.</p>";
             return;
         }
 
-        // --- LOGIQUE DE TRI PAR PRIX DU GAZOLE ---
+        // --- LOGIQUE DE TRI (Identique) ---
         const stationsTriees = data.results.sort((a, b) => {
             const obtenirPrixGazole = (station) => {
                 const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : (station.prix || []);
@@ -382,17 +389,14 @@ async function chercherCarburant() {
             return obtenirPrixGazole(a) - obtenirPrixGazole(b);
         });
 
-        // --- AFFICHAGE DES RÉSULTATS ---
+        // --- AFFICHAGE (Identique avec correction URL Maps) ---
         stationsTriees.forEach((station, index) => {
             const adresse = station.adresse || "Adresse non renseignée";
             const ville = (station.ville || "Ville inconnue").toUpperCase();
-            
-            // Correction de l'URL Google Maps (Template Literal)
             const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
 
-            // Badge pour la station la moins chère
             const badgeMoinsCher = (index === 0) 
-                ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER</div>` 
+                ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER (Rayon 10km)</div>` 
                 : "";
 
             let htmlStation = `
@@ -400,23 +404,17 @@ async function chercherCarburant() {
                     ${badgeMoinsCher}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                         <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
-                        <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold; display: flex; align-items: center; gap: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
-                            🗺️ Maps
-                        </a>
+                        <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">🗺️ Maps</a>
                     </div>
-                    <div style="color: #333; font-weight: 500; font-size: 0.9em; margin-bottom: 10px; padding-right: 70px;">
-                        ${adresse}
-                    </div>
+                    <div style="color: #333; font-weight: 500; font-size: 0.9em; margin-bottom: 10px;">${adresse}</div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
             `;
 
             if (station.prix) {
                 const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
-                
                 prixList.forEach(p => {
                     const valeur = parseFloat(p['@valeur']).toFixed(3);
                     const estGazole = p['@nom'] === "Gazole";
-                    
                     htmlStation += `
                         <div style="background: ${estGazole ? '#fff9f9' : '#fdfdfd'}; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
                             <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p['@nom']}</span>
@@ -424,15 +422,13 @@ async function chercherCarburant() {
                         </div>`;
                 });
             }
-
             htmlStation += `</div></div>`;
             container.innerHTML += htmlStation;
         });
 
     } catch (error) {
         loader.style.display = "none";
-        container.innerHTML = "<p style='color:red; text-align:center;'>Erreur de connexion aux données. Vérifiez votre connexion ou le Shield Brave.</p>";
-        console.error(error);
+        container.innerHTML = `<p style='color:red; text-align:center;'>Erreur : ${error.message}</p>`;
     }
 }
 
