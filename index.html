@@ -25,11 +25,25 @@
             </div>
         </div>
 
-        <div class="tab active" onclick="openTab('tab_accueil', event)">Accueil</div>
-        <div class="tab" onclick="openTab('tab_partage', event)">Tr. Partagé</div>
-        <div class="tab" onclick="openTab('tab_params', event)">⚙️</div>
-        <div class="tab" onclick="openTab('tab_graph', event)">📈</div>
-        <div class="tab" onclick="openTab('tab_carbu', event)">⛽</div>
+<div class="tab active" onclick="openTab('tab_accueil', event)">
+    <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">person</span> TAP
+</div>
+
+<div class="tab" onclick="openTab('tab_partage', event)">
+    <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">groups</span> Tr. Partagé
+</div>
+
+<div class="tab" onclick="openTab('tab_params', event)">
+    <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">settings</span>
+</div>
+
+<div class="tab" onclick="openTab('tab_graph', event)">
+    <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">leaderboard</span>
+</div>
+
+<div class="tab" onclick="openTab('tab_carbu', event)">
+    <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">local_gas_station</span>
+</div>
 
         <div id="tab_accueil" class="tab-content active">
             <p class="section-title">✥ Paramètres de la course ✥</p>
@@ -166,11 +180,12 @@
             <div id="loaderCarbu" style="display:none; text-align: center; margin: 10px; font-weight: bold; color: #d4a700;">
                 Chargement des prix...
             </div>
-<div id="resultsCarbu" class="results-list">
-    <p style="color: #666; font-style: italic; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px;">
-        Cliquez sur <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">my_location</span> ou entrez un code postal.
-    </p>
-</div>
+			
+			<div id="resultsCarbu" class="results-list">
+				<p style="color: #666; font-style: italic; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px;">
+					Cliquez sur <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">my_location</span> ou entrez un code postal.
+				</p>
+			</div>
 
         </div>
 
