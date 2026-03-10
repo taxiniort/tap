@@ -119,17 +119,22 @@ button.pale:hover {
 }
 
 /* Barre inférieure */
+/* Barre inférieure ajustée pour 4 éléments */
 .footer-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 15px;
-    padding: 5px 10px;
+    padding: 8px 10px;
     font-size: 10px;
     color: #555;
-    opacity: 0.8;
-    font-style: italic;
     border-top: 1px solid #ddd;
+    background: rgba(0,0,0,0.02); /* Très léger fond pour délimiter */
+}
+
+/* On s'assure que chaque bloc prend sa place */
+.footer-bar > div {
+    flex: 1;
 }
 
 .footer-bar .convention { text-align: left; }
@@ -442,14 +447,31 @@ button.pale:hover {
     box-shadow: inset 0 -3px 0 #FFEC8B; /* Soulignage interne */
 }
 
+/* Conteneur discret au centre du footer */
+.visite-container {
+    flex: 1;
+    text-align: center;
+    color: #888; /* Gris discret */
+    font-family: Helvetica, sans-serif;
+    font-style: italic;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+}
+
+/* Le chiffre lui-même */
 .visite-badge {
-    background: #000;
-    color: #ffcc00;
-    padding: 2px 8px;
-    border-radius: 4px;
+    color: #666; 
     font-weight: bold;
-    font-family: 'Courier New', Courier, monospace; /* Style compteur */
-    border: 1px solid #ffcc00;
-    box-shadow: inset 0 0 3px rgba(255,204,0,0.5);
-    margin-right: 4px;
+    margin-left: 3px;
+    border-bottom: 1px solid #ffcc00; /* Rappel du taxi très fin sous le chiffre */
+}
+
+/* Ajustement de la barre pour bien répartir les 4 éléments */
+.footer-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 8px 10px;
+    border-top: 1px solid #eee;
 }

@@ -592,19 +592,26 @@ function afficherResultatsStations(results) {
 }
 
 async function incrementerCompteur() {
-    const badge = document.querySelector('.visite-badge');
+    const badge = document.querySelector('#compteur');
+    if (!badge) return;
+
+    // Ton identifiant unique pour le groupement Taxi Niort
+    const ID_UNIQUE = "taxi-halles-niort-2026"; 
+
     try {
-        // Remplace 'taxi-79-app-niort' par un nom unique à toi pour créer ton compteur
-        const namespace = "taxi-79-app-niort"; 
-        const key = "visites";
+        const response = await fetch(`https://api.counterapi.dev/v1/taxi-niort/${ID_UNIQUE}/increment`);
         
-        const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
-        const data = await response.json();
-        
-        if (badge) badge.textContent = data.value.toLocaleString(); // Affiche avec séparateur de milliers
+        if (response.ok) {
+            const data = await response.json();
+            // On affiche le vrai chiffre global
+            badge.textContent = data.count.toString().padStart(4, '0');
+        } else {
+            badge.textContent = "----";
+        }
     } catch (error) {
-        console.error("Erreur compteur:", error);
-        if (badge) badge.textContent = "---"; 
+        // En local (file://) ou sans réseau, on affiche des tirets discrets
+        badge.textContent = "----";
+        console.log("Compteur global indisponible (attente de mise en ligne)");
     }
 }
 
