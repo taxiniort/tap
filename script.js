@@ -358,7 +358,14 @@ async function chercherCarburant() {
     const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=cp%3D%22${cp}%22&limit=20`;
 
     try {
-        const response = await fetch(url);
+		const response = await fetch(url, {
+    method: 'GET',
+    mode: 'cors', // Précise explicitement que c'est une requête cross-origin
+    headers: {
+        'Accept': 'application/json'
+    }
+});
+     //   const response = await fetch(url);
         const data = await response.json();
         loader.style.display = "none";
 
@@ -367,30 +374,44 @@ async function chercherCarburant() {
             return;
         }
 
-        data.results.forEach(station => {
-            let htmlStation = `
-                <div style="background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: left;">
-                    <strong style="color: #2c3e50; text-transform: uppercase;">${station.ville}</strong><br>
-                    <small style="color: #666;">${station.adresse}</small><hr style="border: 0.5px solid #eee; margin: 8px 0;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-            `;
+data.results.forEach(station => {
+    const adresse = station.adresse || "Adresse non renseignée";
+    const ville = station.ville ? station.ville.toUpperCase() : "Ville inconnue";
+    
+    // On crée l'URL Google Maps avec l'adresse et la ville
+    const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
 
-            if (station.prix) {
-                // L'API renvoie parfois une string JSON, parfois un objet
-                const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
-                
-                prixList.forEach(p => {
-                    htmlStation += `
-                        <div style="font-size: 0.9em;">
-                            <span style="font-weight: bold;">${p['@nom']}:</span> 
-                            <span style="color: #8B0000;">${parseFloat(p['@valeur']).toFixed(3)}€</span>
-                        </div>`;
-                });
-            }
+    let htmlStation = `
+        <div style="background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
+                <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    🗺️ Maps
+                </a>
+            </div>
+            <div style="color: #666; font-size: 0.85em; margin-bottom: 10px; line-height: 1.2;">
+                ${adresse}
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+    `;
 
-            htmlStation += `</div></div>`;
-            container.innerHTML += htmlStation;
+    if (station.prix) {
+        const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
+        
+        prixList.forEach(p => {
+            const valeur = parseFloat(p['@valeur']).toFixed(3);
+            htmlStation += `
+                <div style="background: #fdfdfd; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
+                    <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p['@nom']}</span>
+                    <span style="color: #8B0000; font-weight: bold; font-size: 1.1em;">${valeur}€</span>
+                </div>`;
         });
+    }
+
+    htmlStation += `</div></div>`;
+    container.innerHTML += htmlStation;
+});
 
     } catch (error) {
         loader.style.display = "none";
