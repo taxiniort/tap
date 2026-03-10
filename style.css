@@ -442,3 +442,14 @@ button.pale:hover {
     box-shadow: inset 0 -3px 0 #FFEC8B; /* Soulignage interne */
 }
 
+.visite-badge {
+    background: #000;
+    color: #ffcc00;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace; /* Style compteur */
+    border: 1px solid #ffcc00;
+    box-shadow: inset 0 0 3px rgba(255,204,0,0.5);
+    margin-right: 4px;
+}
