@@ -345,8 +345,9 @@ async function chercherCarburant() {
     const loader = document.getElementById('loaderCarbu');
     const container = document.getElementById('resultsCarbu');
 
-    if (!cp || cp.length !== 5) {
-        alert("Veuillez entrer un code postal valide");
+    // Validation simple du CP
+    if (!/^\d{5}$/.test(cp)) {
+        alert("Veuillez entrer un code postal à 5 chiffres");
         return;
     }
 
@@ -354,29 +355,43 @@ async function chercherCarburant() {
     container.innerHTML = "";
 
     try {
+        // 1. Conversion Code Postal -> Coordonnées
         const gpsRes = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&postcode=${cp}&limit=1`);
         const gpsData = await gpsRes.json();
         
-        if (!gpsData.features || gpsData.features.length === 0) throw new Error("Code postal introuvable");
+        if (!gpsData.features || gpsData.features.length === 0) {
+            throw new Error("Localisation introuvable");
+        }
 
         const [lon, lat] = gpsData.features[0].geometry.coordinates;
+        
+        // 2. Appel API Carburant (V2.1)
         const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=within_distance(geom%2C%20geom'POINT(${lon}%20${lat})'%2C%2010km)&limit=50`;
 
         const response = await fetch(url);
+        if (!response.ok) throw new Error("Erreur serveur");
+        
         const data = await response.json();
-        loader.style.display = "none";
 
-        if (!data.results || data.results.length === 0) {
-            container.innerHTML = "<p style='text-align:center;'>Aucune station dans un rayon de 10km.</p>";
+        // 3. Vérification de la présence de résultats
+        if (!data.results || !Array.isArray(data.results) || data.results.length === 0) {
+            container.innerHTML = "<p style='text-align:center; padding:20px; color:#666;'>Aucune station trouvée dans un rayon de 10km.</p>";
             return;
         }
 
-        // APPEL DE LA FONCTION COMMUNE
+        // 4. Envoi vers l'affichage
         afficherResultatsStations(data.results);
 
     } catch (error) {
+        // LE MESSAGE GÉNÉRIQUE (pour Orléans ou tout autre bug)
+        console.error("Détail technique de l'erreur:", error);
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px; color:#666;">
+                <p>⚠️ <strong>Service momentanément indisponible</strong></p>
+                <p style="font-size:0.85em;">Impossible de récupérer les prix pour le moment.<br>Réessayez ultérieurement.</p>
+            </div>`;
+    } finally {
         loader.style.display = "none";
-        container.innerHTML = `<p style='color:red; text-align:center;'>Erreur : ${error.message}</p>`;
     }
 }
 
