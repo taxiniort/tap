@@ -415,3 +415,30 @@ button.pale:hover {
 }
 
 .results-list { max-height: 400px; overflow-y: auto; }
+
+/* 1. Couleur Jaune Cab Éclairci pour les deux premiers onglets */
+.tab:nth-child(2), 
+.tab:nth-child(3) {
+    background: #FFEC8B; /* Un jaune "Cab" mais version crème/lumineuse */
+    color: #111;         /* Texte presque noir pour le contraste */
+    border: 1px solid #EEDC82;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9); /* Effet de relief léger */
+}
+
+/* 2. Effet au survol (un peu plus vif) */
+.tab:nth-child(2):hover, 
+.tab:nth-child(3):hover {
+    background: #FFF68F;
+    color: #000;
+}
+
+/* 3. État ACTIF (Noir avec texte Jaune Cab) */
+/* Quand on clique, on repasse sur ton noir profond 
+   mais avec le texte dans ce jaune doux */
+.tab.active {
+    background: #000 !important;
+    color: #FFEC8B !important;
+    border: 1px solid #000 !important;
+    box-shadow: inset 0 -3px 0 #FFEC8B; /* Soulignage interne */
+}
+
