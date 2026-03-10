@@ -41,12 +41,12 @@ function openTab(tabId, event) {
     if (event) event.currentTarget.classList.add('active');
 
     // Reset visuel de la bande de type (Consultation/Hospit) lors du changement d'onglet
-	  /*  const bandes = document.querySelectorAll(".type-bande");
-		bandes.forEach(b => {
-			b.textContent = "";
-			b.style.display = "none";
-			b.classList.remove("consultation", "hospitalisation");
-		});*/
+    /* const bandes = document.querySelectorAll(".type-bande");
+        bandes.forEach(b => {
+            b.textContent = "";
+            b.style.display = "none";
+            b.classList.remove("consultation", "hospitalisation");
+        });*/
 }
 
 /* ==========================================================================
@@ -333,8 +333,6 @@ deptInput.addEventListener('blur', function() {
     messageDiv.textContent = (value !== '79' && value !== "") ? `Dép. ${value} non pris en charge.` : '';
 });
 
-
-
 /* ==========================================================================
    Carburant
    ========================================================================== */
@@ -367,7 +365,6 @@ async function chercherCarburant() {
         const [lon, lat] = gpsData.features[0].geometry.coordinates;
 
         // ÉTAPE 2 : Chercher les carburants dans un rayon de 10km autour de ce point
-        // On utilise 'within_distance(geom, geom'POINT(lon lat)', 10km)'
         const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=within_distance(geom%2C%20geom'POINT(${lon}%20${lat})'%2C%2010km)&limit=50`;
 
         const response = await fetch(url);
@@ -379,7 +376,7 @@ async function chercherCarburant() {
             return;
         }
 
-        // --- LOGIQUE DE TRI (Identique) ---
+        // --- LOGIQUE DE TRI ---
         const stationsTriees = data.results.sort((a, b) => {
             const obtenirPrixGazole = (station) => {
                 const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : (station.prix || []);
@@ -389,7 +386,7 @@ async function chercherCarburant() {
             return obtenirPrixGazole(a) - obtenirPrixGazole(b);
         });
 
-        // --- AFFICHAGE (Identique avec correction URL Maps) ---
+        // --- AFFICHAGE ---
         stationsTriees.forEach((station, index) => {
             const adresse = station.adresse || "Adresse non renseignée";
             const ville = (station.ville || "Ville inconnue").toUpperCase();
@@ -432,7 +429,6 @@ async function chercherCarburant() {
     }
 }
 
-
 function ouvrirCarteCarbu() {
     const cp = document.getElementById('cpCarbu').value;
     
@@ -465,13 +461,9 @@ function ouvrirCarteCarbu() {
     
     const iframe = document.createElement('iframe');
     
-    // CONSTRUCTION DE L'URL DYNAMIQUE :
-    // q=${cp} -> Force la recherche et le centrage automatique sur cette zone
-    // static=false -> Permet au moteur de bouger la vue au chargement
+    // CONSTRUCTION DE L'URL DYNAMIQUE
     const baseUrl = "https://data.economie.gouv.fr/explore/embed/dataset/prix-des-carburants-en-france-flux-instantane-v2/map/";
-    // q=${cp} -> Centre la carte sur le lieu
-// refine.cp=${cp} -> MASQUE toutes les stations qui n'ont pas ce code postal
-const params = `?q=${cp}&refine.cp=${cp}&basemap=6827db&static=false&datasetcard=false&scrollWheelZoom=true`;
+    const params = `?q=${cp}&refine.cp=${cp}&basemap=6827db&static=false&datasetcard=false&scrollWheelZoom=true`;
     
     iframe.src = baseUrl + params;
     iframe.style.width = "100%";
