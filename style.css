@@ -466,12 +466,3 @@ button.pale:hover {
     border-bottom: 1px solid #ffcc00; /* Rappel du taxi très fin sous le chiffre */
 }
 
-/* Ajustement de la barre pour bien répartir les 4 éléments */
-.footer-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-    padding: 8px 10px;
-    border-top: 1px solid #eee;
-}

@@ -615,5 +615,6 @@ async function incrementerCompteur() {
     }
 }
 
+
 // Appelle la fonction au chargement du DOM
-window.addEventListener('DOMContentLoaded', incrementerCompteur);
+//window.addEventListener('DOMContentLoaded', incrementerCompteur);
