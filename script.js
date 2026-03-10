@@ -383,51 +383,66 @@ async function chercherCarburant() {
         });
 
         // --- AFFICHAGE DES RÉSULTATS ---
-        stationsTriees.forEach((station, index) => {
-            const adresse = station.adresse || "Adresse non renseignée";
-            const ville = (station.ville || "Ville inconnue").toUpperCase();
+// --- AFFICHAGE DES RÉSULTATS STYLE BADGES ---
+stationsTriees.forEach((station, index) => {
+    const adresse = station.adresse || "Adresse non renseignée";
+    const ville = (station.ville || "Ville inconnue").toUpperCase();
+    const cp = station.cp || "";
+    const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
+
+    // Couleurs par type de carburant
+    const configCarbu = {
+        "Gazole": { bg: "#FFEB3B", text: "#000" }, // Jaune
+        "SP95": { bg: "#8BC34A", text: "#000" },   // Vert
+        "SP98": { bg: "#33691E", text: "#fff" },   // Vert foncé
+        "E85": { bg: "#4FC3F7", text: "#000" },    // Bleu ciel
+        "E10": { bg: "#AED581", text: "#000" },    // Vert clair
+        "GPLc": { bg: "#007196", text: "#fff" }    // Bleu pétrole
+    };
+
+    const badgeTop = (index === 0) 
+        ? `<div style="background: #00C853; color: white; font-size: 0.8em; font-weight: bold; padding: 4px 12px; border-radius: 8px; margin-bottom: 8px; display: inline-flex; align-items: center; gap: 5px;">🥇 TOP 1</div>` 
+        : "";
+
+    let htmlStation = `
+        <div style="background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    ${badgeTop}
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.2em; font-weight: bold; color: #555;">${ville}</span>
+                        <span style="color: #999; font-weight: normal;">${cp}</span>
+                    </div>
+                    <div style="color: #777; font-size: 0.9em; margin-top: 4px; margin-bottom: 12px;">${adresse}</div>
+                </div>
+                <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.9em; font-weight: bold; display: flex; align-items: center; gap: 5px;">🗺️ Maps</a>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+    `;
+
+    if (station.prix) {
+        const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
+        
+        // On crée un badge pour chaque carburant
+        prixList.forEach(p => {
+            const nom = p['@nom'];
+            const valeur = p['@valeur'];
+            const style = configCarbu[nom] || { bg: "#eee", text: "#333" };
             
-            // Correction de l'URL Google Maps (Template Literal)
-            const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
+            // Gestion de l'affichage (Prix ou Rupture)
+            const affichagePrix = valeur ? `${parseFloat(valeur).toFixed(3)} €` : "Rupture possible";
 
-            // Badge pour la station la moins chère
-            const badgeMoinsCher = (index === 0) 
-                ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER</div>` 
-                : "";
-
-            let htmlStation = `
-                <div style="background: #fff; border: ${index === 0 ? '2px solid #FFD700' : '1px solid #ddd'}; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;">
-                    ${badgeMoinsCher}
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <strong style="color: #2c3e50; font-size: 1.1em;">📍 ${ville}</strong>
-                        <a href="${urlMaps}" target="_blank" style="text-decoration: none; background-color: #4285F4; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold; display: flex; align-items: center; gap: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
-                            🗺️ Maps
-                        </a>
-                    </div>
-                    <div style="color: #333; font-weight: 500; font-size: 0.9em; margin-bottom: 10px; padding-right: 70px;">
-                        ${adresse}
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            `;
-
-            if (station.prix) {
-                const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
-                
-                prixList.forEach(p => {
-                    const valeur = parseFloat(p['@valeur']).toFixed(3);
-                    const estGazole = p['@nom'] === "Gazole";
-                    
-                    htmlStation += `
-                        <div style="background: ${estGazole ? '#fff9f9' : '#fdfdfd'}; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
-                            <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p['@nom']}</span>
-                            <span style="color: #8B0000; font-weight: bold; font-size: 1.1em;">${valeur}€</span>
-                        </div>`;
-                });
-            }
-
-            htmlStation += `</div></div>`;
-            container.innerHTML += htmlStation;
+            htmlStation += `
+                <div style="background: ${style.bg}; color: ${style.text}; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);">
+                    ${nom} : <span style="font-weight: normal;">${affichagePrix}</span>
+                </div>`;
         });
+    }
+
+    htmlStation += `</div></div>`;
+    container.innerHTML += htmlStation;
+});     
 
     } catch (error) {
         loader.style.display = "none";
