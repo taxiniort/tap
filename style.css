@@ -413,3 +413,5 @@ button.pale:hover {
     font-size: 13px;
     box-sizing: border-box;
 }
+
+.results-list { max-height: 400px; overflow-y: auto; }

@@ -41,12 +41,12 @@ function openTab(tabId, event) {
     if (event) event.currentTarget.classList.add('active');
 
     // Reset visuel de la bande de type (Consultation/Hospit) lors du changement d'onglet
-  /*  const bandes = document.querySelectorAll(".type-bande");
-    bandes.forEach(b => {
-        b.textContent = "";
-        b.style.display = "none";
-        b.classList.remove("consultation", "hospitalisation");
-    });*/
+	  /*  const bandes = document.querySelectorAll(".type-bande");
+		bandes.forEach(b => {
+			b.textContent = "";
+			b.style.display = "none";
+			b.classList.remove("consultation", "hospitalisation");
+		});*/
 }
 
 /* ==========================================================================
@@ -332,3 +332,69 @@ deptInput.addEventListener('blur', function() {
     const value = deptInput.value.trim();
     messageDiv.textContent = (value !== '79' && value !== "") ? `Dép. ${value} non pris en charge.` : '';
 });
+
+
+
+/* ==========================================================================
+   Carburant
+   ========================================================================== */
+/**
+ * Récupère les prix des carburants pour un code postal donné
+ * @param {string} codePostal - Le code postal (ex: "79000")
+ */
+async function chercherCarburant() {
+    const cp = document.getElementById('cpCarbu').value;
+    const container = document.getElementById('resultsCarbu');
+    const loader = document.getElementById('loaderCarbu');
+
+    if (!cp || cp.length !== 5) {
+        alert("Veuillez entrer un code postal valide (5 chiffres)");
+        return;
+    }
+
+    loader.style.display = "block";
+    container.innerHTML = "";
+
+    const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=cp%3D%22${cp}%22&limit=20`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        loader.style.display = "none";
+
+        if (!data.results || data.results.length === 0) {
+            container.innerHTML = "<p>Aucune station trouvée.</p>";
+            return;
+        }
+
+        data.results.forEach(station => {
+            let htmlStation = `
+                <div style="background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: left;">
+                    <strong style="color: #2c3e50; text-transform: uppercase;">${station.ville}</strong><br>
+                    <small style="color: #666;">${station.adresse}</small><hr style="border: 0.5px solid #eee; margin: 8px 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+            `;
+
+            if (station.prix) {
+                // L'API renvoie parfois une string JSON, parfois un objet
+                const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
+                
+                prixList.forEach(p => {
+                    htmlStation += `
+                        <div style="font-size: 0.9em;">
+                            <span style="font-weight: bold;">${p['@nom']}:</span> 
+                            <span style="color: #8B0000;">${parseFloat(p['@valeur']).toFixed(3)}€</span>
+                        </div>`;
+                });
+            }
+
+            htmlStation += `</div></div>`;
+            container.innerHTML += htmlStation;
+        });
+
+    } catch (error) {
+        loader.style.display = "none";
+        container.innerHTML = "<p style='color:red;'>Erreur de connexion aux données.</p>";
+        console.error(error);
+    }
+}

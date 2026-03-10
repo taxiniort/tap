@@ -28,7 +28,8 @@
         <div class="tab" onclick="openTab('tab_partage', event)">Tr. Partagé</div>
         <div class="tab" onclick="openTab('tab_params', event)">Param.</div>
 		<div class="tab" onclick="openTab('tab_graph', event)">Graph.</div>
-
+		<div class="tab" onclick="openTab('tab_carbu', event)">Carbu</div>
+		
         <div id="tab_accueil" class="tab-content active">
             <p class="section-title">✥ Paramètres de la course ✥</p>
 
@@ -142,10 +143,29 @@
 				<img src="remise_consult.png" alt="Graphique Abattements" style="max-width: 100%; border-radius: 8px; border: 1px solid #ddd;">
 			</div>
 		</div>
+
+
+		
+		<div id="tab_carbu" class="tab-content">
+			<p class="section-title">✥ Prix des Carburants ✥</p>
+			
+			<div class="search-box" style="display: flex; gap: 10px; margin-bottom: 20px;">
+				<input type="text" id="cpCarbu" placeholder="Code postal (ex: 79000)" style="flex: 1;">
+				<button type="button" onclick="chercherCarburant()" style="width: auto; padding: 0 15px;">🔍</button>
+			</div>
+
+			<div id="loaderCarbu" style="display:none; text-align: center; margin: 10px;">
+				Chargement des prix...
+			</div>
+
+			<div id="resultsCarbu" class="results-list">
+				<p style="color: #666; font-style: italic; text-align: center;">Entrez un code postal pour voir les prix.</p>
+			</div>
+		</div>
 		
 		<div class="footer-bar">
 			<div class="convention">Convention 01112025</div>
-			<div class="version">v2.2.0</div>
+			<div class="version">v2.3.0</div>
 			<div class="copyright">© 2026 Taxi des Halles, Niort</div>
 		</div>
 		
