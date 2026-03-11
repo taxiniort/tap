@@ -77,6 +77,7 @@ function calculerTarif(passager) {
     const distance = Math.abs(parseFloat(passager.distance)) || 0;
     const dureeAttente = Math.abs(parseFloat(passager.dureeAttente)) || 0;
     const tarifNuit = passager.tarifNuit || false;
+	const tarifNuitDemi = passager.tarifNuitDemi || false;
     const aireMetro = passager.aireMetro || false;
 
     // Sécurité : si pas de distance, pas de calcul
@@ -107,12 +108,24 @@ function calculerTarif(passager) {
         /* CAS 2 : CONSULTATION (Géré comme un Aller/Retour avec attente) */
         textType = "Consultation";
         // En Taxi : Prise en charge + (distance x 2 x tarif A/B) + coût de l'attente
-        totalTaxi = !tarifNuit
-            ? priseChargeTAXI + distance * 2 * tarifA + dureeAttente * tarifMinute
-            : priseChargeTAXI + distance * 2 * tarifB + dureeAttente * tarifMinute;
-        
-        // En CPAM : Calcul d'un aller simple majoré, puis multiplié par 2 (Base forfaitaire A/R)
-        totalCPAM = ((priseChargeCPAM + suppGdeVille + ((distance - 4) * tarifKmCPAM)) * (tarifNuit ? 1.5 : 1)) * 2;
+		if (tarifNuitDemi && !tarifNuit) {
+			// 1 trajet A + 1 trajet B
+			totalTaxi = priseChargeTAXI + (distance * tarifA) + (distance * tarifB) + (dureeAttente * tarifMinute);
+		} else {
+			totalTaxi = !tarifNuit
+				? priseChargeTAXI + (distance * 2 * tarifA) + (dureeAttente * tarifMinute)
+				: priseChargeTAXI + (distance * 2 * tarifB) + (dureeAttente * tarifMinute);
+		}
+		
+		let baseUnTrajetCPAM = priseChargeCPAM + suppGdeVille + (Math.max(0, distance - 4) * tarifKmCPAM);
+		
+		if (tarifNuitDemi && !tarifNuit) {
+			// 1 trajet Jour (x1) + 1 trajet Nuit (x1.5) = Base x 2.5
+			totalCPAM = baseUnTrajetCPAM + (baseUnTrajetCPAM * 1.5);
+		} else {
+			// Soit tout Jour (x2), soit tout Nuit (x3)
+			totalCPAM = (baseUnTrajetCPAM * (tarifNuit ? 1.5 : 1)) * 2;
+		}
     }
 
     return { totalTaxi, totalCPAM, textType };
@@ -130,6 +143,7 @@ function afficherTarifUnPassager() {
         distance: document.getElementById('distance').value,
         dureeAttente: document.getElementById('dureeAttente').value,
         tarifNuit: document.getElementById('tarifNuit').checked,
+		tarifNuitDemi: document.getElementById('tarifNuitDemi').checked,
         aireMetro: document.getElementById('aireMetro').checked
     };
 
@@ -152,7 +166,9 @@ function afficherTarifUnPassager() {
     // Calcul du pourcentage de remise par rapport au tarif Taxi standard
     const remise = 100 - (totalCPAM / totalTaxi * 100);
 
-    majTypeAffichage(resultats.textType);
+	let labelType = resultats.textType;
+	//if (passager.tarifNuitDemi && !passager.tarifNuit) labelType += " (1/2 Nuit)";
+	majTypeAffichage(labelType);
 
     // Affichage des montants formatés
     resultsContainer.innerHTML = `
@@ -193,15 +209,24 @@ function genererFormulairesPassagers() {
 
             <div class="checkbox-container">
                 <input type="checkbox" id="aireMetro_${i}">
-                <label for="aireMetro_${i}">Aire métropolitaine ?</label>
+                <label for="aireMetro_${i}">Aire métropolitaine</label>
             </div>
 
             <div class="checkbox-container">
                 <input type="checkbox" id="tarifNuit_${i}">
-                <label for="tarifNuit_${i}">Tarif nuit ?</label>
+                <label for="tarifNuit_${i}">Tarif nuit</label>
             </div>
+			
+			<div class="checkbox-container">
+				<input type="checkbox" id="tarifNuitDemi_${i}">
+				<label for="tarifNuitDemi_${i}">Tarif nuit 1 trajet sur 2 (Consult.)</label>
+			</div>
         `;
         container.appendChild(div);
+		
+		// --- AJOUT ICI : Griser par défaut à la création ---
+        const nuitDemi = div.querySelector(`#tarifNuitDemi_${i}`);
+        nuitDemi.disabled = true; 
     }
 }
 
@@ -224,6 +249,7 @@ function afficherTarifNPassagers() {
             distance: document.getElementById(`distance_${i}`).value,
             dureeAttente: document.getElementById(`dureeAttente_${i}`).value,
             tarifNuit: document.getElementById(`tarifNuit_${i}`).checked,
+			tarifNuitDemi: document.getElementById(`tarifNuitDemi_${i}`).checked,
             aireMetro: document.getElementById(`aireMetro_${i}`).checked
         };
 
@@ -618,3 +644,52 @@ async function incrementerCompteur() {
 
 // Appelle la fonction au chargement du DOM
 //window.addEventListener('DOMContentLoaded', incrementerCompteur);
+
+
+/* ==========================================================================
+   INTERACTIVITÉ FORMULAIRE
+   ========================================================================== */
+
+const inputAttente = document.getElementById('dureeAttente');
+const checkNuitDemi = document.getElementById('tarifNuitDemi');
+
+/**
+ * Grise ou active la checkbox "1/2 Nuit" selon la présence d'une attente
+ */
+function gererEtatNuitDemi() {
+    const valeurAttente = parseFloat(inputAttente.value) || 0;
+    
+    if (valeurAttente <= 0) {
+        checkNuitDemi.disabled = true;
+        checkNuitDemi.checked = false; // On décoche par sécurité
+
+    } else {
+        checkNuitDemi.disabled = false;
+
+    }
+}
+
+// Pour les passagers dynamiques (Transport Partagé)
+document.getElementById('passengersContainer').addEventListener('input', (e) => {
+    if (e.target.id.startsWith('dureeAttente_') || e.target.id.startsWith('tarifNuit_')) {
+        const index = e.target.id.split('_')[1];
+        const attente = document.getElementById(`dureeAttente_${index}`);
+        const nuitDemi = document.getElementById(`tarifNuitDemi_${index}`);
+        const nuitTotale = document.getElementById(`tarifNuit_${index}`);
+
+        if (nuitDemi) {
+            const estInactif = (parseFloat(attente.value) || 0) <= 0 || nuitTotale.checked;
+            nuitDemi.disabled = estInactif;
+            if (estInactif) nuitDemi.checked = false;
+        }
+    }
+});
+
+
+// Écoute les changements de saisie sur le champ attente
+inputAttente.addEventListener('input', gererEtatNuitDemi);
+
+// Exécute la fonction au chargement pour l'état initial
+window.addEventListener('DOMContentLoaded', gererEtatNuitDemi);
+
+

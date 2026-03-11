@@ -210,21 +210,35 @@ button.pale:hover {
     margin-top: 8px;
 }
 
-.checkbox-container label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0;
-    cursor: pointer;
-    font-size: 13px;
-    color: #333;
-}
 
 .checkbox-container input[type="checkbox"] {
     width: 16px;
     height: 16px;
     cursor: pointer;
     accent-color: #ffcc00;
+}
+
+/* Style par défaut : Noir et Gras (identique à ton Tarif Nuit) */
+.checkbox-container label {
+    color: #000 !important;
+    font-weight: bold !important;
+    opacity: 1 !important;
+    font-style: normal !important;
+    cursor: pointer;
+}
+
+/* Style quand la case est bloquée : Gris et Normal */
+.checkbox-container input[type="checkbox"]:disabled + label {
+    color: #999 !important;      /* Gris comme sur ton image */
+    font-weight: normal !important; /* Enlève le gras */
+    font-style: italic !important;  /* Optionnel : pour bien voir que c'est bloqué */
+    cursor: not-allowed;
+}
+
+/* On assombrit un peu la case elle-même quand elle est disabled */
+.checkbox-container input[type="checkbox"]:disabled {
+    filter: grayscale(1) brightness(0.8);
+    opacity: 0.6;
 }
 
 /* Titres section */
@@ -466,3 +480,18 @@ button.pale:hover {
     border-bottom: 1px solid #ffcc00; /* Rappel du taxi très fin sous le chiffre */
 }
 
+
+
+/* Style pour les éléments désactivés */
+input[type="checkbox"]:disabled + label {
+    color: #999;
+    cursor: not-allowed;
+}
+
+.checkbox-container {
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+}
