@@ -625,7 +625,8 @@ async function incrementerCompteur() {
     const ID_UNIQUE = "taxi-halles-niort-2026"; 
 
     try {
-        const response = await fetch(`https://api.counterapi.dev/v1/taxi-niort/${ID_UNIQUE}/increment`);
+		
+        const response = await fetch(`https://api.counterapi.dev/v2/taxiniorts-team-3245/first-counter-3245`/up);
         
         if (response.ok) {
             const data = await response.json();
@@ -643,7 +644,7 @@ async function incrementerCompteur() {
 
 
 // Appelle la fonction au chargement du DOM
-//window.addEventListener('DOMContentLoaded', incrementerCompteur);
+window.addEventListener('DOMContentLoaded', incrementerCompteur);
 
 
 /* ==========================================================================
