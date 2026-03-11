@@ -201,10 +201,10 @@ function genererFormulairesPassagers() {
         div.className = 'passenger-block';
         div.innerHTML = `
             <h3>⚜ Passager ${i} ⚜</h3>
-            <label for="distance_${i}">Distance parcourue (juste l'aller)</label>
+            <label for="distance_${i}">Distance parcourue (juste l'aller pour une consult)</label>
             <input type="number" id="distance_${i}" step="0.1">
 
-            <label for="dureeAttente_${i}">Durée attente (minutes)</label>
+            <label for="dureeAttente_${i}">Durée attente (minutes) pour consult.</label>
             <input type="number" id="dureeAttente_${i}">
 
             <div class="checkbox-container">
