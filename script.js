@@ -621,24 +621,27 @@ async function incrementerCompteur() {
     const badge = document.querySelector('#compteur');
     if (!badge) return;
 
-    // Ton identifiant unique pour le groupement Taxi Niort
-    const ID_UNIQUE = "taxi-halles-niort-2026"; 
+    // On utilise ton identifiant unique sur l'API publique v1
+    // Namespace: ton équipe / Key: ton compteur
+    const namespace = "taxiniorts-team-3245";
+    const key = "first-counter-3245";
 
     try {
-		h
-        const response = await fetch(`https://api.counterapi.dev/v2/taxiniorts-team-3245/first-counter-3245/up`);
+        // La version v1 ne demande pas de clé Bearer et incrémente via /up
+        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
         
         if (response.ok) {
             const data = await response.json();
-            // On affiche le vrai chiffre global
+            // Dans la v1, le résultat est dans data.count
             badge.textContent = data.count.toString().padStart(4, '0');
         } else {
+            console.error("Réponse API non OK");
             badge.textContent = "----";
         }
     } catch (error) {
-        // En local (file://) ou sans réseau, on affiche des tirets discrets
+        // En local ou erreur réseau
         badge.textContent = "----";
-        console.log("Compteur global indisponible (attente de mise en ligne)");
+        console.log("Note : Le compteur s'activera une fois en ligne sur GitHub.");
     }
 }
 
