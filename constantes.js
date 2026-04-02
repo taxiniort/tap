@@ -55,7 +55,8 @@ const LISTE_AIRE_METRO = [
     "33 - CRF LA TOUR DE GASSIES (Bruges)",
     "33 - HOPITAL SUBURBAIN DU BOUSCAT",
     "33 - ANTENNE AUTODIALYSE AURAD (Le Haillan)",
-
+	"33 - Maison de Santé Protestante 33522 Talence",
+	
     /* --- ÉTABLISSEMENTS RENNES (35) --- */
     "35 - Clinique privée Sévigné (Cesson Sévigné)",
     "35 - Centre hospitalier Privé (St Grégoire)",
@@ -65,12 +66,17 @@ const LISTE_AIRE_METRO = [
     /* --- ÉTABLISSEMENTS MONTPELLIER (34) --- */
     "34 - Clinique St Jean Sud de France (St Jean de Vedas)",
     "34 - Clinique du Parc (Castelnau le Lez)",
+	"34 - Nephrocare CL Parc Castelnau Newco 1 34057 Castelnau le Lez",
+	"34 - Aider Sante UAD St Jean sud de France 34270 St Jean de Vedas",
+	"34 - Aider Sante UAD Grabels Cordier 1 34116 Grabels",
 
     /* --- ÉTABLISSEMENTS TOULOUSE (31) --- */
     "31 - Clinique Croix du sud et SSR attaché (Quint Fonsegrives)",
     "31 - Clinique de l’Union (St Jean)",
     "31 - SSR attaché à la clinique de l'Union (St Jean)",
-
+	"31 - CL NEPHRO EXUPERY UDM UNION ST JEAN 31488 St Jean",
+	"31 - CL NEPHRO EXUPERY UAD UDM QUINT FONSEG 31445 QUINT FONSEGRIVES",
+	
     /* --- ÉTABLISSEMENTS GRENOBLE (38) --- */
     "38 - CHU La Tronche",
     "38 - CHU Echirolles",
@@ -99,5 +105,10 @@ const LISTE_AIRE_METRO = [
     /* --- ÉTABLISSEMENTS STRASBOURG (67) --- */
     "67 - Centre Médico-Chirurgical Obstétrique (Schiltigheim)",
     "67 - UGECAM Alsace (Illkirch)",
-    "67 - Clinique du Ried (Schiltigheim)"
+    "67 - Clinique du Ried (Schiltigheim)",
+	
+	/* --- ÉTABLISSEMENTS ST LAURENT DU VAR (06) --- */
+	"06 - Centre D'HEMODIALYSE INST ARNAULT TZANCK 06123 Saint Laurent du Var",
+	"06 - Centre CARDIO MEDICO CHIRURGICAL TZANCK 06123 Saint Laurent du Var",
+	"06 - INSTITUT ARNAULT TZANCK 06123 Saint Laurent du Var"
 ];
