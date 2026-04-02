@@ -181,7 +181,6 @@ button.pale:hover {
 }
 
 .tab:hover { background: #ffcc00; color: #000; }
-.tab.active { background: #000; color: #ffcc00; }
 
 .tab-content {
     display: none;
@@ -327,6 +326,15 @@ button.pale:hover {
     flex-grow: 1;
     border-top: 1px solid #ddd;
     padding-top: 5px;
+
+    /* Typographie machine à écrire */
+    font-family: 
+        "Courier New",   /* classique et très répandue */
+        Courier,         /* alternative */
+        monospace;       /* police monospace générique */
+    
+    font-size: 0.8rem; /* petite taille, ajustable selon besoin */
+    line-height: 1.2;  /* pour une meilleure lisibilité */
 }
 
 /* PDF boutons */
@@ -424,7 +432,7 @@ button.pale:hover {
     100% { transform: translateX(-100%); }
 }
 
-/* Département */
+
 /* Alignement de la zone département */
 .zone-dep {
     display: flex;
@@ -499,27 +507,6 @@ button.pale:hover {
     border: 1px solid #000 !important;
     box-shadow: inset 0 -3px 0 #FFEC8B; /* Soulignage interne */
 }
-
-/* Conteneur ultra-discret à droite ou au centre du footer */
-.visite-container {
-    flex: 1;
-    text-align: right; /* Aligné à droite pour ne pas attirer l'œil au centre */
-    color: #bbb;       /* Gris très clair/pâle */
-    font-family: Arial, sans-serif;
-    font-size: 8px;    /* Plus petit */
-    letter-spacing: 0.3px;
-    opacity: 0.6;      /* Transparence pour le fondre dans le fond */
-    font-style: normal; /* Plus propre que l'italique pour la discrétion */
-}
-
-/* Le chiffre lui-même, sans fioritures */
-.visite-badge {
-    color: #aaa;       
-    font-weight: normal; /* On enlève le gras */
-    margin-left: 2px;
-    border-bottom: none; /* On supprime la ligne jaune qui "flashe" trop */
-}
-
 
 
 /* Style pour les éléments désactivés */
