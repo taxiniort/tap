@@ -617,7 +617,7 @@ function afficherResultatsStations(results) {
     });
 }
 
-async function incrementerCompteur() {
+/*async function incrementerCompteur() {
     const badge = document.querySelector('#compteur');
     if (!badge) return;
 
@@ -643,11 +643,11 @@ async function incrementerCompteur() {
         badge.textContent = "----";
         console.log("Note : Le compteur s'activera une fois en ligne sur GitHub.");
     }
-}
+}*/
 
 
 // Appelle la fonction au chargement du DOM
-window.addEventListener('DOMContentLoaded', incrementerCompteur);
+//window.addEventListener('DOMContentLoaded', incrementerCompteur);
 
 
 /* ==========================================================================
