@@ -522,3 +522,6 @@ input[type="checkbox"]:disabled + label {
     gap: 8px;
     margin: 10px 0;
 }
+
+
+.footer-bar .copyright a { text-decoration: none; }
