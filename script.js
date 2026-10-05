@@ -379,19 +379,45 @@ deptInput.addEventListener('blur', function() {
     messageDiv.textContent = (value !== '79' && value !== "") ? `Dép. ${value} non pris en charge.` : '';
 });
 
+
+
+
 /* ==========================================================================
    CARBURANT (LOGIQUE API)
    ========================================================================== */
+   
+   // Liste des carburants gérés par le jeu de données, avec leur libellé d'affichage
+const CARBURANTS = [
+    { champ: 'gazole', nom: 'Gazole' },
+    { champ: 'sp95',   nom: 'SP95' },
+    { champ: 'sp98',   nom: 'SP98' },
+    { champ: 'e10',    nom: 'E10' },
+    { champ: 'e85',    nom: 'E85' },
+    { champ: 'gplc',   nom: 'GPLc' }
+];
 
 /**
- * Processus principal : Convertit un CP en coordonnées, puis cherche les prix des carburants
+ * Extrait la liste des carburants disponibles pour une station, au nouveau format "colonnes"
+ * Renvoie un tableau [{ nom, valeur }] compatible avec le reste de l'affichage
  */
+function extrairePrixCarburants(station) {
+    return CARBURANTS
+        .map(c => ({ nom: c.nom, valeur: station[`${c.champ}_prix`] }))
+        .filter(p => p.valeur !== undefined && p.valeur !== null && p.valeur !== '');
+}
+
+function obtenirPrixGazole(station) {
+    const valeur = station.gazole_prix;
+    return (valeur !== undefined && valeur !== null && valeur !== '')
+        ? parseFloat(valeur)
+        : Infinity;
+}
+
 async function chercherCarburant() {
     const cp = document.getElementById('cpCarbu').value;
     const loader = document.getElementById('loaderCarbu');
     const container = document.getElementById('resultsCarbu');
 
-    // Validation du format du Code Postal
     if (!/^\d{5}$/.test(cp)) {
         alert("Veuillez entrer un code postal à 5 chiffres");
         return;
@@ -400,44 +426,90 @@ async function chercherCarburant() {
     loader.style.display = "block";
     container.innerHTML = "";
 
+    // Petit utilitaire : fetch avec timeout + retry sur erreurs transitoires (429/500/502/503/504)
+    async function fetchAvecRetry(url, { tentatives = 3, timeoutMs = 7000 } = {}) {
+        for (let i = 0; i < tentatives; i++) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(timer);
+                if (res.status === 429 || res.status >= 500) {
+                    // Erreur transitoire : on retente après un délai croissant
+                    if (i < tentatives - 1) {
+                        await new Promise(r => setTimeout(r, 600 * (i + 1)));
+                        continue;
+                    }
+                }
+                return res; // succès, ou échec définitif (4xx autre que 429) qu'on laisse gérer à l'appelant
+            } catch (e) {
+                clearTimeout(timer);
+                if (i === tentatives - 1) throw e; // timeout ou erreur réseau, dernière tentative : on relance
+                await new Promise(r => setTimeout(r, 600 * (i + 1)));
+            }
+        }
+    }
+
     try {
-        // 1. Appel à l'API Adresse pour transformer le Code Postal en Latitude/Longitude
-        const gpsRes = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&postcode=${cp}&limit=1`);
+        // 1. Géocodage du CP
+        const gpsRes = await fetchAvecRetry(
+            `https://api-adresse.data.gouv.fr/search/?q=${cp}&postcode=${cp}&limit=1`
+        );
+        if (!gpsRes.ok) throw new Error(`API Adresse: HTTP ${gpsRes.status}`);
         const gpsData = await gpsRes.json();
-        
+
         if (!gpsData.features || gpsData.features.length === 0) {
             throw new Error("Localisation introuvable");
         }
 
         const [lon, lat] = gpsData.features[0].geometry.coordinates;
-        
-        // 2. Appel à l'API Prix-Carburants pour trouver les stations dans un rayon de 10km
-        const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=within_distance(geom%2C%20geom'POINT(${lon}%20${lat})'%2C%2010km)&limit=50`;
 
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Erreur serveur");
-        
+        // 2. Recherche des stations - apostrophes explicitement encodées (%27) par précaution
+        const where = `within_distance(geom,%20geom%27POINT(${lon}%20${lat})%27,%2010km)`;
+        const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=${where}&limit=50`;
+
+        const response = await fetchAvecRetry(url);
+
+        if (!response.ok) {
+            const corps = await response.text().catch(() => "");
+            console.error(`Carburants: HTTP ${response.status}`, corps.slice(0, 300));
+            throw new Error(`Service carburants indisponible (HTTP ${response.status})`);
+        }
+
         const data = await response.json();
 
-        // 3. Vérification si des stations existent à proximité
         if (!data.results || !Array.isArray(data.results) || data.results.length === 0) {
             container.innerHTML = "<p style='text-align:center; padding:20px; color:#666;'>Aucune station trouvée dans un rayon de 10km.</p>";
             return;
         }
 
-        // 4. Envoi des données vers la fonction d'affichage
+        // Mise en cache pour un éventuel repli si l'API retombe en panne juste après
+        try {
+            localStorage.setItem(`carbu_cache_${cp}`, JSON.stringify({ at: Date.now(), results: data.results }));
+        } catch (_) { /* quota localStorage dépassé, tant pis */ }
+
         afficherResultatsStations(data.results);
 
     } catch (error) {
-        // Affiche un message d'erreur générique en cas de problème réseau ou API
         console.error("Détail technique de l'erreur:", error);
+
+        // Repli : si on a un résultat récent en cache pour ce CP, on l'affiche avec un avertissement
+        try {
+            const cache = JSON.parse(localStorage.getItem(`carbu_cache_${cp}`) || "null");
+            if (cache && Date.now() - cache.at < 2 * 60 * 60 * 1000) { // moins de 2h
+                container.innerHTML = `<p style="text-align:center; padding:8px; color:#a66; font-size:0.85em;">⚠️ Service indisponible, affichage des derniers prix connus (${new Date(cache.at).toLocaleTimeString('fr-FR')})</p>`;
+                afficherResultatsStations(cache.results);
+                return;
+            }
+        } catch (_) { /* pas de cache exploitable */ }
+
         container.innerHTML = `
             <div style="text-align:center; padding:20px; color:#666;">
                 <p>⚠️ <strong>Service momentanément indisponible</strong></p>
                 <p style="font-size:0.85em;">Impossible de récupérer les prix pour le moment.<br>Réessayez ultérieurement.</p>
             </div>`;
     } finally {
-        loader.style.display = "none"; // Masque le loader dans tous les cas
+        loader.style.display = "none";
     }
 }
 
@@ -566,26 +638,16 @@ function afficherResultatsStations(results) {
     const container = document.getElementById('resultsCarbu');
     container.innerHTML = "";
 
-    // TRI : On place les stations les moins chères (Gazole) en haut de liste
-    const stationsTriees = results.sort((a, b) => {
-        const obtenirPrixGazole = (station) => {
-            const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : (station.prix || []);
-            const gazole = prixList.find(p => p['@nom'] === "Gazole");
-            return gazole ? parseFloat(gazole['@valeur']) : Infinity;
-        };
-        return obtenirPrixGazole(a) - obtenirPrixGazole(b);
-    });
+    // TRI : on place les stations les moins chères (Gazole) en haut de liste
+    const stationsTriees = results.sort((a, b) => obtenirPrixGazole(a) - obtenirPrixGazole(b));
 
-    // Boucle de génération des cartes stations
     stationsTriees.forEach((station, index) => {
         const adresse = station.adresse || "Adresse non renseignée";
         const ville = (station.ville || "Ville inconnue").toUpperCase();
-        // Création du lien Google Maps
         const urlMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse + ' ' + ville)}`;
 
-        // Badge spécial pour la station la moins chère
-        const badgeMoinsCher = (index === 0) 
-            ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER (10km)</div>` 
+        const badgeMoinsCher = (index === 0)
+            ? `<div style="background: #FFD700; color: #000; font-size: 0.7em; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; display: inline-block; border: 1px solid #b8860b;">🏆 LE MOINS CHER (10km)</div>`
             : "";
 
         let htmlStation = `
@@ -599,19 +661,22 @@ function afficherResultatsStations(results) {
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
         `;
 
-        // Affichage du prix de chaque carburant disponible dans la station
-        if (station.prix) {
-            const prixList = typeof station.prix === 'string' ? JSON.parse(station.prix) : station.prix;
-            prixList.forEach(p => {
-                const valeur = parseFloat(p['@valeur']).toFixed(3);
-                const estGazole = p['@nom'] === "Gazole";
-                htmlStation += `
-                    <div style="background: ${estGazole ? '#fff9f9' : '#fdfdfd'}; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
-                        <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p['@nom']}</span>
-                        <span style="color: #8B0000; font-weight: bold; font-size: 1.1em;">${valeur}€</span>
-                    </div>`;
-            });
+        // Nouveau format : champs plats {carburant}_prix, plus de liste à parcourir
+        const prixCarburants = extrairePrixCarburants(station);
+        prixCarburants.forEach(p => {
+            const valeur = parseFloat(p.valeur).toFixed(3);
+            const estGazole = p.nom === "Gazole";
+            htmlStation += `
+                <div style="background: ${estGazole ? '#fff9f9' : '#fdfdfd'}; padding: 6px; border-radius: 4px; border-left: 3px solid #8B0000; border-bottom: 1px solid #eee;">
+                    <span style="font-size: 0.7em; font-weight: bold; display: block; color: #7f8c8d; text-transform: uppercase;">${p.nom}</span>
+                    <span style="color: #8B0000; font-weight: bold; font-size: 1.1em;">${valeur}€</span>
+                </div>`;
+        });
+
+        if (prixCarburants.length === 0) {
+            htmlStation += `<div style="grid-column: 1 / -1; color:#999; font-size:0.85em;">Aucun prix disponible pour cette station</div>`;
         }
+
         htmlStation += `</div></div>`;
         container.innerHTML += htmlStation;
     });
